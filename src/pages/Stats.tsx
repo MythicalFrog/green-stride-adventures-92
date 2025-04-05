@@ -30,11 +30,11 @@ const StatsPage = () => {
   
   const getModeColor = (mode: string) => {
     switch (mode) {
-      case 'walking': return 'bg-green-100 text-green-700';
-      case 'biking': return 'bg-blue-100 text-blue-700';
-      case 'car': return 'bg-red-100 text-red-700';
-      case 'public': return 'bg-purple-100 text-purple-700';
-      default: return 'bg-gray-100 text-gray-700';
+      case 'walking': return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300';
+      case 'biking': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300';
+      case 'car': return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300';
+      case 'public': return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300';
+      default: return 'bg-gray-100 text-gray-700 dark:bg-gray-800/50 dark:text-gray-300';
     }
   };
 
@@ -42,35 +42,35 @@ const StatsPage = () => {
     <div className="container mx-auto px-4 py-8 mb-16 max-w-4xl">
       <h1 className="text-3xl font-bold mb-6">Your Eco Stats</h1>
       
-      <Card className="mb-8">
+      <Card className="mb-8 bg-transparent backdrop-blur-sm">
         <CardHeader className="pb-2">
           <CardTitle>Total Impact</CardTitle>
           <CardDescription>Your overall environmental contribution</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div className="p-3 bg-muted rounded-lg">
+            <div className="p-3 rounded-lg border border-green-200 bg-transparent backdrop-blur-sm dark:border-green-900">
               <div className="text-sm text-muted-foreground">CO₂ Saved</div>
-              <div className="text-xl font-bold text-green-600">{formatCO2(userStats.totalCarbonSaved)}</div>
+              <div className="text-xl font-bold text-green-600 dark:text-green-400">{formatCO2(userStats.totalCarbonSaved)}</div>
             </div>
-            <div className="p-3 bg-muted rounded-lg">
+            <div className="p-3 rounded-lg border border-blue-200 bg-transparent backdrop-blur-sm dark:border-blue-900">
               <div className="text-sm text-muted-foreground">Distance</div>
-              <div className="text-xl font-bold">{formatDistance(userStats.totalDistance)}</div>
+              <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{formatDistance(userStats.totalDistance)}</div>
             </div>
-            <div className="p-3 bg-muted rounded-lg">
+            <div className="p-3 rounded-lg border border-amber-200 bg-transparent backdrop-blur-sm dark:border-amber-900">
               <div className="text-sm text-muted-foreground">Points</div>
-              <div className="text-xl font-bold text-amber-600">{userStats.totalPoints}</div>
+              <div className="text-xl font-bold text-amber-600 dark:text-amber-400">{userStats.totalPoints}</div>
             </div>
-            <div className="p-3 bg-muted rounded-lg">
+            <div className="p-3 rounded-lg border border-purple-200 bg-transparent backdrop-blur-sm dark:border-purple-900">
               <div className="text-sm text-muted-foreground">Level</div>
-              <div className="text-xl font-bold text-primary">{userStats.level}</div>
+              <div className="text-xl font-bold text-purple-600 dark:text-purple-400">{userStats.level}</div>
             </div>
           </div>
           
           {/* Equivalent impact */}
-          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="mt-6 p-4 bg-transparent border border-green-200 rounded-lg dark:border-green-900">
             <div className="font-medium mb-2">Environmental Impact</div>
-            <div className="text-sm text-green-800">
+            <div className="text-sm text-green-800 dark:text-green-300">
               Your eco-friendly choices are equivalent to:
               <ul className="list-disc pl-5 mt-2 space-y-1">
                 <li>Planting {Math.ceil(userStats.totalCarbonSaved / 0.06)} trees</li>
@@ -82,7 +82,7 @@ const StatsPage = () => {
         </CardContent>
       </Card>
       
-      <Card>
+      <Card className="bg-transparent backdrop-blur-sm">
         <CardHeader className="pb-2">
           <CardTitle>Transport Breakdown</CardTitle>
           <CardDescription>Stats by transportation mode</CardDescription>
@@ -90,7 +90,7 @@ const StatsPage = () => {
         <CardContent>
           <div className="space-y-4">
             {Object.entries(transportStats).map(([mode, stats]) => (
-              <div key={mode} className="border rounded-lg p-4">
+              <div key={mode} className="border rounded-lg p-4 bg-transparent backdrop-blur-sm">
                 <div className="flex items-center">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center ${getModeColor(mode)}`}>
                     {mode === 'walking' ? '🚶' : 
@@ -113,8 +113,8 @@ const StatsPage = () => {
                     <div className="text-xs text-muted-foreground">CO₂ Impact</div>
                     <div className="font-medium">
                       {mode !== 'car' 
-                        ? <span className="text-green-600">-{formatCO2(stats.carbonSaved)}</span> 
-                        : <span className="text-red-600">+{formatCO2(stats.carbonSaved || 0.12)}</span>}
+                        ? <span className="text-green-600 dark:text-green-400">-{formatCO2(stats.carbonSaved)}</span> 
+                        : <span className="text-red-600 dark:text-red-400">+{formatCO2(stats.carbonSaved || 0.12)}</span>}
                     </div>
                   </div>
                   <div>

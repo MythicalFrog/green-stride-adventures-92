@@ -47,6 +47,30 @@ const RewardsPage = () => {
       pointsRequired: 0,
       icon: '🏆',
       unlocked: false,
+    },
+    {
+      id: 'earth-guardian',
+      title: 'Earth Guardian',
+      description: 'Save 50kg of CO₂',
+      pointsRequired: 0,
+      icon: '🌍',
+      unlocked: false,
+    },
+    {
+      id: 'city-explorer',
+      title: 'City Explorer',
+      description: 'Visit 10 different locations',
+      pointsRequired: 0,
+      icon: '🏙️',
+      unlocked: false,
+    },
+    {
+      id: 'streak-master',
+      title: 'Streak Master',
+      description: 'Maintain a 14-day streak',
+      pointsRequired: 0,
+      icon: '🔥',
+      unlocked: false,
     }
   ];
   
@@ -74,6 +98,30 @@ const RewardsPage = () => {
       pointsCost: 500,
       icon: '🥕',
       canAfford: userStats.totalPoints >= 500,
+    },
+    {
+      id: 'renewable-energy',
+      title: '$10 Off Renewable Energy Bill',
+      description: 'For customers of Green Power Co.',
+      pointsCost: 800,
+      icon: '⚡',
+      canAfford: userStats.totalPoints >= 800,
+    },
+    {
+      id: 'eco-backpack',
+      title: 'Recycled Material Backpack',
+      description: 'Sustainable fashion from EcoStyle',
+      pointsCost: 1200,
+      icon: '🎒',
+      canAfford: userStats.totalPoints >= 1200,
+    },
+    {
+      id: 'plant-trees',
+      title: 'Plant 5 Trees in Your Name',
+      description: 'Through Forest Restoration Project',
+      pointsCost: 1500,
+      icon: '🌳',
+      canAfford: userStats.totalPoints >= 1500,
     }
   ];
   
@@ -81,13 +129,13 @@ const RewardsPage = () => {
     <div className="container mx-auto px-4 py-8 mb-16 max-w-4xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Rewards</h1>
-        <div className="bg-muted px-4 py-1 rounded-full flex items-center">
+        <div className="bg-transparent px-4 py-1 rounded-full flex items-center border border-yellow-300 dark:border-yellow-700">
           <Trophy className="w-4 h-4 text-yellow-500 mr-1" />
           <span className="font-medium">{userStats.totalPoints} pts</span>
         </div>
       </div>
       
-      <Card className="mb-8">
+      <Card className="mb-8 bg-transparent backdrop-blur-sm">
         <CardHeader className="pb-2">
           <CardTitle>Your Achievements</CardTitle>
           <CardDescription>Milestones you've reached on your eco journey</CardDescription>
@@ -97,10 +145,10 @@ const RewardsPage = () => {
             {rewards.map((reward) => (
               <div 
                 key={reward.id} 
-                className={`border rounded-lg p-4 transition ${
+                className={`border rounded-lg p-4 transition backdrop-blur-sm ${
                   reward.unlocked 
-                    ? 'bg-gradient-to-br from-green-50 to-blue-50 border-green-200' 
-                    : 'bg-muted/50 border-muted'
+                    ? 'bg-gradient-to-br from-green-50/40 to-blue-50/40 border-green-200 dark:from-green-900/20 dark:to-blue-900/20 dark:border-green-800/50' 
+                    : 'bg-transparent border-muted'
                 }`}
               >
                 <div className="flex items-center mb-2">
@@ -112,7 +160,7 @@ const RewardsPage = () => {
                     <div className="text-xs text-muted-foreground">{reward.description}</div>
                   </div>
                   {reward.unlocked ? (
-                    <CheckCircle className="h-5 w-5 text-green-600 ml-2" />
+                    <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 ml-2" />
                   ) : (
                     <Lock className="h-5 w-5 text-muted-foreground ml-2" />
                   )}
@@ -131,7 +179,7 @@ const RewardsPage = () => {
         </CardContent>
       </Card>
       
-      <Card>
+      <Card className="bg-transparent backdrop-blur-sm">
         <CardHeader className="pb-2">
           <CardTitle>Available Rewards</CardTitle>
           <CardDescription>Redeem your points for these eco-friendly offers</CardDescription>
@@ -141,14 +189,14 @@ const RewardsPage = () => {
             {availableCoupons.map((coupon) => (
               <div 
                 key={coupon.id} 
-                className={`border rounded-lg p-4 ${
+                className={`border rounded-lg p-4 backdrop-blur-sm bg-transparent ${
                   coupon.canAfford 
                     ? 'hover:border-primary cursor-pointer transition' 
                     : 'opacity-70'
                 }`}
               >
                 <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-2xl">
+                  <div className="w-12 h-12 rounded-full bg-transparent border border-muted flex items-center justify-center text-2xl">
                     {coupon.icon}
                   </div>
                   <div className="ml-3 flex-1">
@@ -157,7 +205,7 @@ const RewardsPage = () => {
                   </div>
                 </div>
                 <div className="flex justify-between items-center mt-4">
-                  <div className="flex items-center text-amber-600">
+                  <div className="flex items-center text-amber-600 dark:text-amber-400">
                     <Trophy className="w-4 h-4 mr-1" />
                     <span className="font-medium">{coupon.pointsCost} pts</span>
                   </div>

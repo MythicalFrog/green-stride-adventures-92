@@ -39,7 +39,7 @@ const Navigation = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background border-t py-2 px-4 z-10">
+    <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-md border-t py-2 px-4 z-10 dark:bg-gray-900/80">
       <div className="max-w-md mx-auto flex justify-between items-center">
         {navItems.map((item) => (
           <Link 

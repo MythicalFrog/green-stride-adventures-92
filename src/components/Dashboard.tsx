@@ -27,10 +27,10 @@ const Dashboard = () => {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="flex flex-col md:flex-row items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Green Stride Adventures</h1>
+          <h1 className="text-3xl font-bold">EcoQuests</h1>
           <p className="text-muted-foreground">Track your eco-friendly journeys and earn rewards</p>
         </div>
-        <div className="mt-4 md:mt-0 flex items-center bg-muted rounded-full px-4 py-1">
+        <div className="mt-4 md:mt-0 flex items-center bg-transparent rounded-full px-4 py-1 border border-primary/20">
           <div className="mr-2 text-primary font-semibold">Level {userStats.level}</div>
           <div className="w-32 h-2 bg-muted-foreground/20 rounded-full overflow-hidden">
             <div 
@@ -50,6 +50,7 @@ const Dashboard = () => {
           title="Carbon Saved"
           value={formatCO2(userStats.totalCarbonSaved)}
           description="Total CO₂ emissions prevented"
+          className="bg-transparent backdrop-blur-sm"
         />
         
         <StatsCard 
@@ -57,6 +58,7 @@ const Dashboard = () => {
           title="Distance Traveled"
           value={formatDistance(userStats.totalDistance)}
           description="Total eco-friendly distance"
+          className="bg-transparent backdrop-blur-sm"
         />
         
         <StatsCard 
@@ -64,11 +66,12 @@ const Dashboard = () => {
           title="Points Earned"
           value={userStats.totalPoints.toString()}
           description={`Day streak: ${userStats.streakDays}`}
+          className="bg-transparent backdrop-blur-sm"
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
+        <Card className="bg-transparent backdrop-blur-sm">
           <CardHeader>
             <CardTitle>Recent Journeys</CardTitle>
             <CardDescription>Your eco-friendly trips</CardDescription>
@@ -78,7 +81,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="bg-transparent backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle>Active Challenges</CardTitle>

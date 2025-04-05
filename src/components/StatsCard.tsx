@@ -16,7 +16,7 @@ const StatsCard = ({ icon, title, value, description, className }: StatsCardProp
     <Card className={cn("overflow-hidden", className)}>
       <CardContent className="p-6">
         <div className="flex items-center space-x-2 mb-2">
-          <div className="p-1.5 rounded-full bg-muted">
+          <div className="p-1.5 rounded-full bg-transparent">
             {icon}
           </div>
           <div className="font-medium text-sm">{title}</div>

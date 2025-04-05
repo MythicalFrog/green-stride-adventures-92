@@ -21,11 +21,11 @@ const Index = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="flex flex-col items-center mb-8 text-center">
-        <h1 className="text-4xl font-bold mb-2">Green Stride Adventures</h1>
+        <h1 className="text-4xl font-bold mb-2">EcoQuests</h1>
         <p className="text-muted-foreground mb-8 max-w-md">Make green choices, track your impact, earn rewards</p>
         
         {/* Level progress */}
-        <div className="w-full max-w-md bg-muted rounded-full px-4 py-2 flex flex-col mb-2">
+        <div className="w-full max-w-md rounded-full px-4 py-2 flex flex-col mb-2 bg-transparent border border-primary/20">
           <div className="flex justify-between text-sm mb-1">
             <span className="font-medium">Level {userStats.level}</span>
             <span className="text-muted-foreground">{userStats.totalPoints}/{getNextLevelPoints()} XP</span>
@@ -40,11 +40,11 @@ const Index = () => {
         
         {/* Streak display */}
         <div className="flex items-center mb-4">
-          <div className="flex items-center bg-amber-100 text-amber-800 px-3 py-1 rounded-full">
+          <div className="flex items-center bg-amber-100 text-amber-800 px-3 py-1 rounded-full dark:bg-amber-900/30 dark:text-amber-300">
             <Flame className="h-4 w-4 mr-1 text-amber-500" />
             <span className="font-medium">{userStats.streakDays} day streak</span>
           </div>
-          <div className="flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full ml-2">
+          <div className="flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full ml-2 dark:bg-green-900/30 dark:text-green-300">
             <CalendarCheck className="h-4 w-4 mr-1 text-green-500" />
             <span className="font-medium">Active today</span>
           </div>
@@ -55,17 +55,17 @@ const Index = () => {
         <EarthVisualization />
         <div className="absolute inset-0 flex items-center justify-center z-10 bg-background/40 backdrop-blur-sm">
           <div className="grid grid-cols-3 gap-4 w-full max-w-xl px-4">
-            <div className="flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm p-4 rounded-xl border border-muted shadow-sm">
+            <div className="flex flex-col items-center justify-center backdrop-blur-sm p-4 rounded-xl border border-muted shadow-sm bg-transparent">
               <Leaf className="h-8 w-8 text-eco-green mb-2" />
               <div className="font-bold text-xl">{formatCO2(userStats.totalCarbonSaved)}</div>
               <div className="text-xs text-muted-foreground">CO₂ Saved</div>
             </div>
-            <div className="flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm p-4 rounded-xl border border-muted shadow-sm">
+            <div className="flex flex-col items-center justify-center backdrop-blur-sm p-4 rounded-xl border border-muted shadow-sm bg-transparent">
               <Gauge className="h-8 w-8 text-eco-sky mb-2" />
               <div className="font-bold text-xl">{formatDistance(userStats.totalDistance)}</div>
               <div className="text-xs text-muted-foreground">Distance</div>
             </div>
-            <div className="flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm p-4 rounded-xl border border-muted shadow-sm">
+            <div className="flex flex-col items-center justify-center backdrop-blur-sm p-4 rounded-xl border border-muted shadow-sm bg-transparent">
               <Award className="h-8 w-8 text-yellow-500 mb-2" />
               <div className="font-bold text-xl">{userStats.totalPoints}</div>
               <div className="text-xs text-muted-foreground">Points</div>
@@ -75,7 +75,7 @@ const Index = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="border border-muted bg-gradient-to-br from-background to-muted/50">
+        <Card className="border border-muted bg-transparent backdrop-blur-sm">
           <CardContent className="p-6">
             <div className="flex items-center mb-4">
               <div className="p-2 rounded-full bg-primary/10">
@@ -85,19 +85,19 @@ const Index = () => {
             </div>
             
             <div className="space-y-2">
-              <div className="flex items-center justify-between p-2 bg-background rounded-lg">
+              <div className="flex items-center justify-between p-2 bg-background/50 rounded-lg">
                 <div className="flex items-center">
-                  <div className="p-1.5 rounded-full bg-green-100">
-                    <Leaf className="h-3 w-3 text-green-600" />
+                  <div className="p-1.5 rounded-full bg-green-100 dark:bg-green-900/30">
+                    <Leaf className="h-3 w-3 text-green-600 dark:text-green-400" />
                   </div>
                   <span className="ml-2 text-sm">Walk to park</span>
                 </div>
                 <span className="text-xs text-muted-foreground">2.1 km</span>
               </div>
-              <div className="flex items-center justify-between p-2 bg-background rounded-lg">
+              <div className="flex items-center justify-between p-2 bg-background/50 rounded-lg">
                 <div className="flex items-center">
-                  <div className="p-1.5 rounded-full bg-blue-100">
-                    <Gauge className="h-3 w-3 text-blue-600" />
+                  <div className="p-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30">
+                    <Gauge className="h-3 w-3 text-blue-600 dark:text-blue-400" />
                   </div>
                   <span className="ml-2 text-sm">Bike to store</span>
                 </div>
@@ -107,7 +107,7 @@ const Index = () => {
           </CardContent>
         </Card>
         
-        <Card className="border border-muted bg-gradient-to-br from-background to-muted/50">
+        <Card className="border border-muted bg-transparent backdrop-blur-sm">
           <CardContent className="p-6">
             <div className="flex items-center mb-4">
               <div className="p-2 rounded-full bg-primary/10">
@@ -117,19 +117,19 @@ const Index = () => {
             </div>
             
             <div className="space-y-2">
-              <div className="flex items-center justify-between p-2 bg-background rounded-lg">
+              <div className="flex items-center justify-between p-2 bg-background/50 rounded-lg">
                 <div className="flex items-center">
-                  <div className="p-1.5 rounded-full bg-amber-100">
-                    <Award className="h-3 w-3 text-amber-600" />
+                  <div className="p-1.5 rounded-full bg-amber-100 dark:bg-amber-900/30">
+                    <Award className="h-3 w-3 text-amber-600 dark:text-amber-400" />
                   </div>
                   <span className="ml-2 text-sm">Weekend Walker</span>
                 </div>
                 <span className="text-xs text-primary">25 pts</span>
               </div>
-              <div className="flex items-center justify-between p-2 bg-background rounded-lg">
+              <div className="flex items-center justify-between p-2 bg-background/50 rounded-lg">
                 <div className="flex items-center">
-                  <div className="p-1.5 rounded-full bg-purple-100">
-                    <Flame className="h-3 w-3 text-purple-600" />
+                  <div className="p-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30">
+                    <Flame className="h-3 w-3 text-purple-600 dark:text-purple-400" />
                   </div>
                   <span className="ml-2 text-sm">7-Day Streak</span>
                 </div>
