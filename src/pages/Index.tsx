@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useApp } from '../context/AppContext';
 import { formatDistance, formatCO2 } from '../utils/formatters';
-import { Leaf, Award, Gauge, Flame, CalendarCheck } from 'lucide-react';
+import { Leaf, Award, Gauge, Flame, CalendarCheck, Trophy } from 'lucide-react';
 import EarthVisualization from '../components/EarthVisualization';
 
 const Index = () => {

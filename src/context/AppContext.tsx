@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Journey, Challenge, UserStats, TransportMode } from '../types';
 import { toast } from '../components/ui/use-toast';
@@ -99,28 +100,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
         if (diffDays === 1) {
           // Streak continues
-          setUserStats(prev => ({
-            ...prev,
-            streakDays: prev.streakDays + 1
+          setUserStats(prevStats => ({
+            ...prevStats,
+            streakDays: prevStats.streakDays + 1
           }));
           
           // Check for streak achievements
-          if ((prev.streakDays + 1) >= 3) {
-            const updatedAchievements = prev.achievements.map(a => 
+          if ((prevStats.streakDays + 1) >= 3) {
+            const updatedAchievements = prevStats.achievements.map(a => 
               a.id === 'streak-3' ? {...a, unlocked: true, unlockedAt: new Date().toISOString()} : a
             );
             
-            return {...prev, streakDays: prev.streakDays + 1, achievements: updatedAchievements};
+            return {...prevStats, streakDays: prevStats.streakDays + 1, achievements: updatedAchievements};
           }
           
-          return {...prev, streakDays: prev.streakDays + 1};
+          return {...prevStats, streakDays: prevStats.streakDays + 1};
         } else if (diffDays > 1) {
           // Streak broken
-          return {...prev, streakDays: 1};
+          return {...prevStats, streakDays: 1};
         }
       }
       
-      return prev;
+      return prevStats;
     };
     
     // Set today as active day
