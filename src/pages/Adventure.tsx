@@ -1,0 +1,98 @@
+
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useApp } from '../context/AppContext';
+import { formatDistance, formatCO2 } from '../utils/formatters';
+import { Leaf, Award, Gauge } from 'lucide-react';
+import StatsCard from '../components/StatsCard';
+import JourneyList from '../components/JourneyList';
+import ChallengeList from '../components/ChallengeList';
+
+const Adventure = () => {
+  const { userStats, challenges } = useApp();
+  
+  const activeChallenges = challenges.filter(c => !c.completed).slice(0, 3);
+  
+  const getNextLevelPoints = () => {
+    return userStats.level * 500;
+  };
+  
+  const progressToNextLevel = () => {
+    const nextLevelPoints = getNextLevelPoints();
+    return (userStats.totalPoints / nextLevelPoints) * 100;
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold">Green Adventures</h1>
+          <p className="text-muted-foreground">Complete eco-challenges and earn rewards</p>
+        </div>
+        <div className="mt-4 md:mt-0 flex items-center bg-muted rounded-full px-4 py-1">
+          <div className="mr-2 text-primary font-semibold">Level {userStats.level}</div>
+          <div className="w-32 h-2 bg-muted-foreground/20 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-primary" 
+              style={{ width: `${progressToNextLevel()}%` }}
+            ></div>
+          </div>
+          <div className="ml-2 text-xs text-muted-foreground">
+            {userStats.totalPoints}/{getNextLevelPoints()} XP
+          </div>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <StatsCard 
+          icon={<Leaf className="h-5 w-5 text-eco-green" />}
+          title="Carbon Saved"
+          value={formatCO2(userStats.totalCarbonSaved)}
+          description="Total CO₂ emissions prevented"
+        />
+        
+        <StatsCard 
+          icon={<Gauge className="h-5 w-5 text-eco-sky" />} 
+          title="Distance Traveled"
+          value={formatDistance(userStats.totalDistance)}
+          description="Total eco-friendly distance"
+        />
+        
+        <StatsCard 
+          icon={<Award className="h-5 w-5 text-yellow-500" />}
+          title="Points Earned"
+          value={userStats.totalPoints.toString()}
+          description={`Day streak: ${userStats.streakDays}`}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Journeys</CardTitle>
+            <CardDescription>Your eco-friendly trips</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <JourneyList limit={5} />
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Active Challenges</CardTitle>
+              <CardDescription>Complete these for bonus points</CardDescription>
+            </div>
+            <Button variant="outline" size="sm">View All</Button>
+          </CardHeader>
+          <CardContent>
+            <ChallengeList challenges={activeChallenges} />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default Adventure;

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Leaf, Map, BarChart, Trophy } from 'lucide-react';
+import { Leaf, Map, BarChart, Trophy, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '../context/AppContext';
 
@@ -15,6 +15,11 @@ const Navigation = () => {
       name: 'Home',
       path: '/',
       icon: <Leaf className="h-5 w-5" />,
+    },
+    {
+      name: 'Adventure',
+      path: '/adventure',
+      icon: <Compass className="h-5 w-5" />,
     },
     {
       name: 'Map',

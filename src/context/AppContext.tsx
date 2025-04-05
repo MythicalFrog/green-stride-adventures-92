@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Journey, Challenge, UserStats, TransportMode } from '../types';
 import { toast } from '../components/ui/use-toast';
@@ -18,7 +17,7 @@ const initialUserStats: UserStats = {
   totalDistance: 0,
   totalCarbonSaved: 0,
   totalPoints: 0,
-  streakDays: 1,
+  streakDays: 5, // Starting with a 5-day streak for better demo
   achievements: [
     {
       id: 'first-steps',
@@ -33,6 +32,14 @@ const initialUserStats: UserStats = {
       description: 'Save 5kg of CO2',
       icon: 'leaf',
       unlocked: false,
+    },
+    {
+      id: 'streak-3',
+      title: 'Consistency',
+      description: 'Maintain a 3-day streak',
+      icon: 'flame',
+      unlocked: true,
+      unlockedAt: new Date().toISOString(),
     }
   ],
   level: 1,
@@ -79,6 +86,46 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
     
     setUserStats(stats);
+    
+    // Check for streak maintenance
+    const checkStreak = () => {
+      const today = new Date().toISOString().split('T')[0];
+      const lastActive = localStorage.getItem('lastActiveDay');
+      
+      if (lastActive && lastActive !== today) {
+        const lastActiveDate = new Date(lastActive);
+        const todayDate = new Date(today);
+        const diffDays = Math.round(Math.abs((todayDate.getTime() - lastActiveDate.getTime()) / (24 * 60 * 60 * 1000)));
+        
+        if (diffDays === 1) {
+          // Streak continues
+          setUserStats(prev => ({
+            ...prev,
+            streakDays: prev.streakDays + 1
+          }));
+          
+          // Check for streak achievements
+          if ((prev.streakDays + 1) >= 3) {
+            const updatedAchievements = prev.achievements.map(a => 
+              a.id === 'streak-3' ? {...a, unlocked: true, unlockedAt: new Date().toISOString()} : a
+            );
+            
+            return {...prev, streakDays: prev.streakDays + 1, achievements: updatedAchievements};
+          }
+          
+          return {...prev, streakDays: prev.streakDays + 1};
+        } else if (diffDays > 1) {
+          // Streak broken
+          return {...prev, streakDays: 1};
+        }
+      }
+      
+      return prev;
+    };
+    
+    // Set today as active day
+    localStorage.setItem('lastActiveDay', new Date().toISOString().split('T')[0]);
+    
   }, []);
 
   const calculateCarbonSaved = (mode: TransportMode, distance: number): number => {
@@ -144,6 +191,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     setCurrentJourney(newJourney);
+    
+    // Update streak - mark today as active
+    localStorage.setItem('lastActiveDay', new Date().toISOString().split('T')[0]);
+    
     toast({
       title: `${mode.charAt(0).toUpperCase() + mode.slice(1)} journey started`,
       description: "Your eco-friendly journey is now being tracked!",
@@ -175,8 +226,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       points,
       completed: true,
       endLocation: {
-        lat: currentJourney.startLocation?.lat || 0 + (Math.random() * 0.01),
-        lng: currentJourney.startLocation?.lng || 0 + (Math.random() * 0.01),
+        lat: (currentJourney.startLocation?.lat || 0) + (Math.random() * 0.01),
+        lng: (currentJourney.startLocation?.lng || 0) + (Math.random() * 0.01),
       }
     };
 
