@@ -57,7 +57,7 @@ const Navigation = () => {
             )}
           >
             {item.icon}
-            {!useApp().userStats?.isPhoneView && <span className="text-xs mt-1">{item.name}</span>}
+            {userStats && userStats.isPhoneView === undefined ? <span className="text-xs mt-1">{item.name}</span> : userStats?.isPhoneView === false && <span className="text-xs mt-1">{item.name}</span>}
           </Link>
         ))}
       </div>

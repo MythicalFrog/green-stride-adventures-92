@@ -144,7 +144,7 @@ const DeviceToggle = () => {
       variant="outline"
       size="icon"
       onClick={toggleDeviceView}
-      className="fixed bottom-36 right-4 z-50 rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
+      className="fixed bottom-60 right-4 z-50 rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
       aria-label="Toggle device view"
     >
       {isMobileView ? <Laptop className="h-4 w-4" /> : <Smartphone className="h-4 w-4" />}
