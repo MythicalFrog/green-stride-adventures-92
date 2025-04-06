@@ -43,8 +43,9 @@ export interface UserStats {
   totalCarbonSaved: number;
   totalPoints: number;
   streakDays: number;
-  achievements: Achievement[];
+  activeDays: number;
   level: number;
+  redeemedRewards: string[];
 }
 
 export interface Achievement {

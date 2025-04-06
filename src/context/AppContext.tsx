@@ -130,12 +130,19 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     const distanceM = Math.round(distanceKm * 1000);
     
     // Calculate carbon saved (kg) - rough estimate
+    // Only non-car modes save carbon
     const carbonSaved = currentJourney.mode !== 'car' ? distanceKm * 0.12 : 0;
     
-    // Calculate points
-    const points = currentJourney.mode === 'walking' ? Math.floor(distanceM / 100) :
-                  currentJourney.mode === 'biking' ? Math.floor(distanceM / 200) :
-                  currentJourney.mode === 'public' ? Math.floor(distanceM / 300) : 0;
+    // Calculate points - FIXED: ensure walking, biking, and public transport earn points
+    let points = 0;
+    if (currentJourney.mode === 'walking') {
+      points = Math.max(5, Math.floor(distanceM / 100)); // Min 5 points for walking
+    } else if (currentJourney.mode === 'biking') {
+      points = Math.max(3, Math.floor(distanceM / 200)); // Min 3 points for biking
+    } else if (currentJourney.mode === 'public') {
+      points = Math.max(2, Math.floor(distanceM / 300)); // Min 2 points for public transit
+    }
+    // Car journeys earn 0 points (no change needed)
     
     const completedJourney: Journey = {
       ...currentJourney,
@@ -159,10 +166,20 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     // Reset current journey
     setCurrentJourney(null);
     
+    // Give feedback to the user with more detail about their journey
     toast({
       title: "Journey Completed!",
-      description: `You earned ${points} points and saved ${carbonSaved.toFixed(2)}kg of CO2!`,
+      description: `You earned ${points} points, traveled ${(distanceM/1000).toFixed(2)}km, and saved ${carbonSaved.toFixed(2)}kg of CO2!`,
     });
+    
+    // Add confetti for non-car journeys to celebrate eco-friendly travel
+    if (currentJourney.mode !== 'car' && points > 0) {
+      confetti({
+        particleCount: 50,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }
   };
 
   return (

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '../context/AppContext';
@@ -55,7 +54,7 @@ const ChallengeList = ({ challenges }: ChallengeListProps) => {
                   <MapPin className="h-3 w-3 mr-1" />
                   {challenge.location?.name || "Location unknown"}
                   <span className="mx-1">•</span>
-                  {formatDistance(challenge.distance)}
+                  {formatDistance(Number(challenge.distance))}
                 </div>
               </div>
             </div>
