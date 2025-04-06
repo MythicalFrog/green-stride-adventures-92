@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 const Index = () => {
   const { userStats } = useApp();
   const [displayText, setDisplayText] = useState("");
-  const phrases = ["EcoQuest", "Save Earth", "Green Travel"];
+  const phrases = ["Make green choices", "Track your impact", "Earn rewards"];
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   
@@ -64,17 +64,6 @@ const Index = () => {
         
         <div className="h-8 mb-4 overflow-hidden">
           <h2 className="text-2xl font-medium">{displayText}<span className="animate-pulse">|</span></h2>
-        </div>
-        
-        <p className="text-muted-foreground mb-8 max-w-md">Make green choices, track your impact, earn rewards</p>
-        
-        <div className="flex gap-4 mb-6">
-          <Link to="/login">
-            <Button variant="outline">Sign In</Button>
-          </Link>
-          <Link to="/signup">
-            <Button>Join Now</Button>
-          </Link>
         </div>
         
         {/* Level progress */}

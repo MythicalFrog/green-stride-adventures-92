@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -11,11 +12,6 @@ const Navigation = () => {
   
   const navItems = [
     {
-      name: 'Journey',
-      path: '/journey',
-      icon: <Route className="h-5 w-5" />,
-    },
-    {
       name: 'Home',
       path: '/',
       icon: <Leaf className="h-5 w-5" />,
@@ -24,6 +20,11 @@ const Navigation = () => {
       name: 'Adventure',
       path: '/adventure',
       icon: <Compass className="h-5 w-5" />,
+    },
+    {
+      name: 'Journey',
+      path: '/journey',
+      icon: <Route className="h-5 w-5" />,
     },
     {
       name: 'Map',

@@ -3,6 +3,7 @@ import React from 'react';
 import EarthVisualization from '../components/EarthVisualization';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Leaf, Route, Globe } from 'lucide-react';
 
 const Journey = () => {
   return (
@@ -39,10 +40,10 @@ const Journey = () => {
           </div>
           
           <div className="mt-8 p-6 bg-transparent backdrop-blur-sm border border-muted rounded-lg max-w-md">
-            <h3 className="text-xl font-medium mb-4">Start Your Eco Journey Today</h3>
+            <h3 className="text-xl font-medium mb-4">What is EcoQuest?</h3>
             <p className="text-muted-foreground mb-4">
-              Track your eco-friendly transportation choices, reduce your carbon footprint, 
-              and earn rewards while contributing to a healthier planet.
+              EcoQuest is a platform designed to help you make environmentally friendly choices in your daily travel and activities. 
+              By tracking your sustainable transportation methods, you can see your positive impact on the environment while earning rewards.
             </p>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="p-3 border rounded-lg bg-green-50/30 dark:bg-green-900/20">
