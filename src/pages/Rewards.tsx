@@ -120,10 +120,34 @@ const RewardsPage = () => {
       pointsCost: 800,
       icon: '⚡',
       canAfford: userStats.totalPoints >= 800,
+    },
+    {
+      id: 'eco-event',
+      title: 'Free Ticket to Eco Event',
+      description: 'One ticket to City Sustainability Fair',
+      pointsCost: 650,
+      icon: '🎟️',
+      canAfford: userStats.totalPoints >= 650,
     }
-  ];
+  ].sort((a, b) => a.pointsCost - b.pointsCost);
   
   const additionalCoupons = [
+    {
+      id: 'reusable-bottle',
+      title: 'Premium Reusable Water Bottle',
+      description: 'Stainless steel, vacuum-insulated',
+      pointsCost: 900,
+      icon: '🍶',
+      canAfford: userStats.totalPoints >= 900,
+    },
+    {
+      id: 'eco-workshop',
+      title: 'Free Eco-Workshop Entry',
+      description: 'Learn sustainable living skills',
+      pointsCost: 600,
+      icon: '🔧',
+      canAfford: userStats.totalPoints >= 600,
+    },
     {
       id: 'eco-backpack',
       title: 'Recycled Material Backpack',
@@ -141,14 +165,6 @@ const RewardsPage = () => {
       canAfford: userStats.totalPoints >= 1500,
     },
     {
-      id: 'eco-hotel',
-      title: '30% Off Eco-Hotel Stay',
-      description: 'At participating Green Hotels',
-      pointsCost: 2000,
-      icon: '🏨',
-      canAfford: userStats.totalPoints >= 2000,
-    },
-    {
       id: 'solar-charger',
       title: 'Portable Solar Phone Charger',
       description: 'Harness the sun to power your devices',
@@ -157,22 +173,14 @@ const RewardsPage = () => {
       canAfford: userStats.totalPoints >= 1800,
     },
     {
-      id: 'reusable-bottle',
-      title: 'Premium Reusable Water Bottle',
-      description: 'Stainless steel, vacuum-insulated',
-      pointsCost: 900,
-      icon: '🍶',
-      canAfford: userStats.totalPoints >= 900,
-    },
-    {
-      id: 'eco-workshop',
-      title: 'Free Eco-Workshop Entry',
-      description: 'Learn sustainable living skills',
-      pointsCost: 600,
-      icon: '🔧',
-      canAfford: userStats.totalPoints >= 600,
+      id: 'eco-hotel',
+      title: '30% Off Eco-Hotel Stay',
+      description: 'At participating Green Hotels',
+      pointsCost: 2000,
+      icon: '🏨',
+      canAfford: userStats.totalPoints >= 2000,
     }
-  ];
+  ].sort((a, b) => a.pointsCost - b.pointsCost);
   
   const handleRedeemReward = (coupon: any) => {
     if (!coupon.canAfford) return;
@@ -299,50 +307,53 @@ const RewardsPage = () => {
               className="w-full flex justify-between items-center"
               onClick={() => setShowAllCoupons(!showAllCoupons)}
             >
-              <span>{showAllCoupons ? "Hide additional rewards" : "Show more rewards"}</span>
+              <span>{showAllCoupons ? "Hide additional rewards" : "Show additional rewards"}</span>
               <ChevronRight className={`h-4 w-4 transition-transform ${showAllCoupons ? 'rotate-90' : ''}`} />
             </Button>
           </div>
           
           {showAllCoupons && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-              {additionalCoupons.map((coupon) => (
-                <div 
-                  key={coupon.id} 
-                  className={`border rounded-lg p-4 backdrop-blur-sm bg-transparent ${
-                    coupon.canAfford 
-                      ? 'hover:border-primary cursor-pointer transition' 
-                      : 'opacity-70'
-                  }`}
-                  onClick={() => coupon.canAfford && handleRedeemReward(coupon)}
-                >
-                  <div className="flex items-center">
-                    <div className="w-12 h-12 rounded-full bg-transparent border border-muted flex items-center justify-center text-2xl">
-                      {coupon.icon}
+            <div className="mt-6">
+              <h3 className="text-lg font-medium mb-4">Additional Rewards</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {additionalCoupons.map((coupon) => (
+                  <div 
+                    key={coupon.id} 
+                    className={`border rounded-lg p-4 backdrop-blur-sm bg-transparent ${
+                      coupon.canAfford 
+                        ? 'hover:border-primary cursor-pointer transition' 
+                        : 'opacity-70'
+                    }`}
+                    onClick={() => coupon.canAfford && handleRedeemReward(coupon)}
+                  >
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 rounded-full bg-transparent border border-muted flex items-center justify-center text-2xl">
+                        {coupon.icon}
+                      </div>
+                      <div className="ml-3 flex-1">
+                        <div className="font-medium">{coupon.title}</div>
+                        <div className="text-xs text-muted-foreground">{coupon.description}</div>
+                      </div>
                     </div>
-                    <div className="ml-3 flex-1">
-                      <div className="font-medium">{coupon.title}</div>
-                      <div className="text-xs text-muted-foreground">{coupon.description}</div>
+                    <div className="flex justify-between items-center mt-4">
+                      <div className="flex items-center text-amber-600 dark:text-amber-400">
+                        <Trophy className="w-4 h-4 mr-1" />
+                        <span className="font-medium">{coupon.pointsCost} pts</span>
+                      </div>
+                      <button
+                        className={`px-3 py-1 rounded text-sm ${
+                          coupon.canAfford
+                            ? 'bg-primary text-white'
+                            : 'bg-muted text-muted-foreground'
+                        }`}
+                        disabled={!coupon.canAfford}
+                      >
+                        {coupon.canAfford ? 'Redeem' : 'Not enough points'}
+                      </button>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center mt-4">
-                    <div className="flex items-center text-amber-600 dark:text-amber-400">
-                      <Trophy className="w-4 h-4 mr-1" />
-                      <span className="font-medium">{coupon.pointsCost} pts</span>
-                    </div>
-                    <button
-                      className={`px-3 py-1 rounded text-sm ${
-                        coupon.canAfford
-                          ? 'bg-primary text-white'
-                          : 'bg-muted text-muted-foreground'
-                      }`}
-                      disabled={!coupon.canAfford}
-                    >
-                      {coupon.canAfford ? 'Redeem' : 'Not enough points'}
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
         </CardContent>

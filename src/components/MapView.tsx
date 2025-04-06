@@ -2,6 +2,13 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+// Add type definition for Leaflet to fix TypeScript errors
+declare global {
+  interface Window {
+    L: any;
+  }
+}
+
 const MapView = () => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -30,6 +37,8 @@ const MapView = () => {
 
       // Initialize map
       const L = window.L;
+      if (!L) return; // Exit if Leaflet is not loaded yet
+      
       const map = L.map(mapContainerRef.current).setView([40, -100], 4);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,

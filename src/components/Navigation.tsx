@@ -15,6 +15,7 @@ const Navigation = () => {
       name: 'Journey',
       path: '/journey',
       icon: <Route className="h-5 w-5" />,
+      className: "mr-auto" // Add auto margin to push Journey far left
     },
     {
       name: 'Home',
@@ -45,6 +46,7 @@ const Navigation = () => {
       name: 'About',
       path: '/about',
       icon: <Info className="h-5 w-5" />,
+      className: "ml-auto" // Add auto margin to push About far right
     },
   ];
 
@@ -57,7 +59,8 @@ const Navigation = () => {
             to={item.path} 
             className={cn(
               "flex flex-col items-center p-2 rounded-md transition-colors",
-              location.pathname === item.path ? "text-primary" : "text-muted-foreground hover:text-foreground"
+              location.pathname === item.path ? "text-primary" : "text-muted-foreground hover:text-foreground",
+              item.className // Apply the custom spacing class
             )}
           >
             {item.icon}
