@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Laptop, Smartphone } from 'lucide-react';
@@ -143,8 +142,8 @@ const DeviceToggle = () => {
     <Button
       variant="outline"
       size="icon"
+      className="rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
       onClick={toggleDeviceView}
-      className="fixed bottom-60 right-4 z-50 rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
       aria-label="Toggle device view"
     >
       {isMobileView ? <Laptop className="h-4 w-4" /> : <Smartphone className="h-4 w-4" />}

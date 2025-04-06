@@ -42,6 +42,9 @@ const Navigation = () => {
     },
   ];
 
+  // Default to showing labels if isPhoneView is not defined
+  const shouldShowLabels = userStats?.isPhoneView === undefined || userStats?.isPhoneView === false;
+
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-md border-t py-2 px-4 z-10 dark:bg-gray-900/80">
       <div className="max-w-md mx-auto flex justify-between items-center">
@@ -57,7 +60,7 @@ const Navigation = () => {
             )}
           >
             {item.icon}
-            {userStats && userStats.isPhoneView === undefined ? <span className="text-xs mt-1">{item.name}</span> : userStats?.isPhoneView === false && <span className="text-xs mt-1">{item.name}</span>}
+            {shouldShowLabels && <span className="text-xs mt-1">{item.name}</span>}
           </Link>
         ))}
       </div>

@@ -36,7 +36,7 @@ const ThemeToggle = () => {
     <Button
       variant="outline"
       size="icon"
-      className="fixed bottom-72 right-4 z-50 rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
+      className="rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
       onClick={toggleTheme}
       aria-label="Toggle theme"
     >
