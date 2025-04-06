@@ -11,6 +11,7 @@ import Adventure from "./pages/Adventure";
 import MapView from "./components/MapView";
 import StatsPage from "./pages/Stats";
 import RewardsPage from "./pages/Rewards";
+import LeaderboardPage from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
 import About from "./pages/About";
 import Login from "./pages/Login";
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="map" element={<MapView />} />
             <Route path="stats" element={<StatsPage />} />
             <Route path="rewards" element={<RewardsPage />} />
+            <Route path="leaderboard" element={<LeaderboardPage />} />
             <Route path="about" element={<About />} />
           </Route>
           <Route path="/login" element={<Login />} />

@@ -2,9 +2,10 @@
 import React from 'react';
 import EarthVisualization from '../components/EarthVisualization';
 import { useApp } from '../context/AppContext';
-import { Leaf, Route, Globe } from 'lucide-react';
+import { Leaf, Route, Globe, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 const Journey = () => {
   const { currentJourney } = useApp();
@@ -104,6 +105,77 @@ const Journey = () => {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      
+      {/* Who Are We Section */}
+      <div className="mt-16 mb-12">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold flex items-center justify-center gap-2">
+            <Users className="h-8 w-8 text-primary" />
+            Who Are We
+          </h2>
+          <p className="text-muted-foreground mt-2 max-w-xl mx-auto">
+            Meet the passionate team behind EcoQuest who are dedicated to making our planet greener through technology.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="overflow-hidden bg-transparent backdrop-blur-sm">
+            <div className="aspect-square w-full overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" 
+                alt="Team member 1" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <CardContent className="p-4 text-center">
+              <h3 className="font-bold">Emma Chen</h3>
+              <p className="text-sm text-muted-foreground">Founder & CEO</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="overflow-hidden bg-transparent backdrop-blur-sm">
+            <div className="aspect-square w-full overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" 
+                alt="Team member 2" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <CardContent className="p-4 text-center">
+              <h3 className="font-bold">Michael Park</h3>
+              <p className="text-sm text-muted-foreground">CTO</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="overflow-hidden bg-transparent backdrop-blur-sm">
+            <div className="aspect-square w-full overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" 
+                alt="Team member 3" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <CardContent className="p-4 text-center">
+              <h3 className="font-bold">Alex Rivera</h3>
+              <p className="text-sm text-muted-foreground">Lead Developer</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="overflow-hidden bg-transparent backdrop-blur-sm">
+            <div className="aspect-square w-full overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" 
+                alt="Team member 4" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <CardContent className="p-4 text-center">
+              <h3 className="font-bold">Sarah Kim</h3>
+              <p className="text-sm text-muted-foreground">UX/UI Designer</p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

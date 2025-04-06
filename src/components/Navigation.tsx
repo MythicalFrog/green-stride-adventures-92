@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Leaf, Map, BarChart, Trophy, Compass, Info, Route } from 'lucide-react';
+import { Leaf, Map, BarChart, Trophy, Compass, Info, Route, Medal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '../context/AppContext';
 
@@ -41,6 +41,11 @@ const Navigation = () => {
       name: 'Rewards',
       path: '/rewards',
       icon: <Trophy className="h-5 w-5" />,
+    },
+    {
+      name: 'Leaderboard',
+      path: '/leaderboard',
+      icon: <Medal className="h-5 w-5" />,
     },
     {
       name: 'About',

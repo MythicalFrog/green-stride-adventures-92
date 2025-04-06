@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Navigation from './Navigation';
 import JourneyControls from './JourneyControls';
 import ThemeToggle from './ThemeToggle';
+import DeviceToggle from './DeviceToggle';
 import { AppProvider } from '../context/AppContext';
 
 const Layout = () => {
@@ -13,6 +14,7 @@ const Layout = () => {
         <Outlet />
         <JourneyControls />
         <ThemeToggle />
+        <DeviceToggle />
         <Navigation />
       </div>
     </AppProvider>
