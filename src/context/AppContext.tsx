@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { mockUserStats, generateMockJourneys, generateMockChallenges } from '../utils/mockData';
 import { UserStats, Journey, Challenge, TransportMode } from '../types';
@@ -11,7 +10,7 @@ interface AppContextType {
   challenges: Challenge[];
   currentJourney: Journey | null;
   incrementStats: (points: number, distance: number, carbonSaved: number) => void;
-  completeChallenge: (points: number) => void;
+  completeChallenge: (challengeId: string) => void;
   redeemReward: (id: string, points: number) => void;
   resetStats: () => void;
   startJourney: (mode: TransportMode) => void;
@@ -48,12 +47,33 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     }));
   };
 
-  const completeChallenge = (points: number) => {
+  const completeChallenge = (challengeId: string) => {
+    const challenge = challenges.find(c => c.id === challengeId);
+    
+    if (!challenge) return;
+    
+    setChallenges(prevChallenges => 
+      prevChallenges.map(c => 
+        c.id === challengeId ? { ...c, completed: true } : c
+      )
+    );
+    
     setUserStats((prevStats) => ({
       ...prevStats,
-      totalPoints: prevStats.totalPoints + points,
-      level: calculateLevel(prevStats.totalPoints + points),
+      totalPoints: prevStats.totalPoints + challenge.points,
+      level: calculateLevel(prevStats.totalPoints + challenge.points),
     }));
+    
+    toast({
+      title: "Challenge Completed! 🎉",
+      description: `You earned ${challenge.points} points for completing "${challenge.title}"`,
+    });
+    
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
   };
 
   const redeemReward = (id: string, pointsCost: number) => {
@@ -63,13 +83,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       redeemedRewards: [...prevStats.redeemedRewards, id]
     }));
     
-    // Display success message and confetti
     toast({
       title: "Reward Redeemed!",
       description: "Congratulations on helping save the planet!",
     });
     
-    // Trigger confetti animation
     confetti({
       particleCount: 100,
       spread: 70,
@@ -121,7 +139,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     const durationMs = now.getTime() - startTime.getTime();
     const durationMinutes = durationMs / (1000 * 60);
     
-    // Calculate simulated distance based on duration and mode
     const speed = currentJourney.mode === 'walking' ? 5 : // km/h
                  currentJourney.mode === 'biking' ? 15 :
                  currentJourney.mode === 'public' ? 25 : 40; // car
@@ -129,20 +146,16 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     const distanceKm = (speed * durationMinutes) / 60;
     const distanceM = Math.round(distanceKm * 1000);
     
-    // Calculate carbon saved (kg) - rough estimate
-    // Only non-car modes save carbon
     const carbonSaved = currentJourney.mode !== 'car' ? distanceKm * 0.12 : 0;
     
-    // Calculate points - FIXED: ensure walking, biking, and public transport earn points
     let points = 0;
     if (currentJourney.mode === 'walking') {
-      points = Math.max(5, Math.floor(distanceM / 100)); // Min 5 points for walking
+      points = Math.max(5, Math.floor(distanceM / 100));
     } else if (currentJourney.mode === 'biking') {
-      points = Math.max(3, Math.floor(distanceM / 200)); // Min 3 points for biking
+      points = Math.max(3, Math.floor(distanceM / 200));
     } else if (currentJourney.mode === 'public') {
-      points = Math.max(2, Math.floor(distanceM / 300)); // Min 2 points for public transit
+      points = Math.max(2, Math.floor(distanceM / 300));
     }
-    // Car journeys earn 0 points (no change needed)
     
     const completedJourney: Journey = {
       ...currentJourney,
@@ -157,22 +170,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       }
     };
     
-    // Update journeys list
     setJourneys(prev => [completedJourney, ...prev]);
     
-    // Update stats
     incrementStats(points, distanceM, carbonSaved);
     
-    // Reset current journey
     setCurrentJourney(null);
     
-    // Give feedback to the user with more detail about their journey
     toast({
       title: "Journey Completed!",
       description: `You earned ${points} points, traveled ${(distanceM/1000).toFixed(2)}km, and saved ${carbonSaved.toFixed(2)}kg of CO2!`,
     });
     
-    // Add confetti for non-car journeys to celebrate eco-friendly travel
     if (currentJourney.mode !== 'car' && points > 0) {
       confetti({
         particleCount: 50,

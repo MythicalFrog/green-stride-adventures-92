@@ -19,10 +19,13 @@ const About = () => {
         </p>
       </div>
       
-      <div className="relative w-full h-80 mb-12 rounded-2xl overflow-hidden">
-        <EarthVisualization />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Card className="max-w-md mx-auto bg-background/40 backdrop-blur-md border border-muted/50 shadow-lg">
+      <div className="relative flex flex-col md:flex-row w-full mb-12 rounded-2xl overflow-hidden">
+        <div className="w-full md:w-1/2 h-80 relative">
+          <EarthVisualization />
+        </div>
+        
+        <div className="w-full md:w-1/2 flex items-center justify-center p-4">
+          <Card className="w-full bg-background/40 backdrop-blur-md border border-muted/50 shadow-lg">
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold mb-4 text-center">Our Mission</h2>
               <p className="text-center mb-6">
