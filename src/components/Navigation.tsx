@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Leaf, Map, BarChart, Trophy, Compass, Route } from 'lucide-react';
+import { Leaf, Map, BarChart, Trophy, Compass, Route, Medal, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '../context/AppContext';
 
@@ -65,3 +65,4 @@ const Navigation = () => {
 };
 
 export default Navigation;
+
