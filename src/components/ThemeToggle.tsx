@@ -142,31 +142,31 @@ const ThemeToggle = () => {
     }
   }, []);
 
-  const toggleDarkMode = () => {
-    if (isDarkMode) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      setIsDarkMode(false);
-      
-      // When switching to light mode, apply the light version of current color theme
-      const lightTheme = colorThemes.find(theme => 
-        theme.name.replace(" Dark", "") === currentTheme.replace(" Dark", ""));
-      if (lightTheme) {
-        applyColorTheme(lightTheme, false);
-        setCurrentTheme(lightTheme.name);
-      }
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      setIsDarkMode(true);
-      
-      // When switching to dark mode, apply the dark version of current color theme
-      const darkTheme = darkColorThemes.find(theme => 
-        theme.name.replace(" Dark", "") === currentTheme.replace(" Dark", ""));
-      if (darkTheme) {
-        applyColorTheme(darkTheme, false);
-        setCurrentTheme(darkTheme.name);
-      }
+  const setLightMode = () => {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+    setIsDarkMode(false);
+    
+    // Apply the light version of current color theme
+    const lightTheme = colorThemes.find(theme => 
+      theme.name.replace(" Dark", "") === currentTheme.replace(" Dark", ""));
+    if (lightTheme) {
+      applyColorTheme(lightTheme, false);
+      setCurrentTheme(lightTheme.name);
+    }
+  };
+
+  const setDarkMode = () => {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+    setIsDarkMode(true);
+    
+    // Apply the dark version of current color theme
+    const darkTheme = darkColorThemes.find(theme => 
+      theme.name.replace(" Dark", "") === currentTheme.replace(" Dark", ""));
+    if (darkTheme) {
+      applyColorTheme(darkTheme, false);
+      setCurrentTheme(darkTheme.name);
     }
   };
 
@@ -198,53 +198,75 @@ const ThemeToggle = () => {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
-          aria-label="Toggle theme"
-        >
-          {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuItem 
-          className="flex justify-between items-center"
-          onClick={toggleDarkMode}
-        >
-          <span>{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
-          {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        </DropdownMenuItem>
-        
-        <DropdownMenuSeparator />
-        <div className="px-2 py-1.5 text-sm font-semibold">Color Themes</div>
-        
-        {(isDarkMode ? darkColorThemes : colorThemes).map((theme) => (
-          <DropdownMenuItem
-            key={theme.name}
-            onClick={() => applyColorTheme(theme)}
-            className={cn(
-              "flex justify-between items-center",
-              currentTheme === theme.name && "bg-accent/50"
-            )}
+    <div className="flex gap-2">
+      {/* Light Mode Button */}
+      <Button
+        variant="outline"
+        size="icon"
+        className={cn(
+          "rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm",
+          !isDarkMode && "ring-2 ring-primary/50"
+        )}
+        aria-label="Light mode"
+        onClick={setLightMode}
+      >
+        <Sun className="h-4 w-4" />
+      </Button>
+
+      {/* Dark Mode Button */}
+      <Button
+        variant="outline"
+        size="icon"
+        className={cn(
+          "rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm",
+          isDarkMode && "ring-2 ring-primary/50"
+        )}
+        aria-label="Dark mode"
+        onClick={setDarkMode}
+      >
+        <Moon className="h-4 w-4" />
+      </Button>
+
+      {/* Color Theme Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
+            aria-label="Change color theme"
           >
-            <span>{theme.name.replace(" Dark", "")}</span>
-            <div className="flex">
-              <div 
-                className="h-4 w-4 rounded-full border"
-                style={{ background: `hsl(${theme.primary})` }} 
-              />
-              <div 
-                className="h-4 w-4 rounded-full border -ml-1.5"
-                style={{ background: `hsl(${theme.secondary})` }} 
-              />
-            </div>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+            <Palette className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <div className="px-2 py-1.5 text-sm font-semibold">Color Themes</div>
+          
+          {(isDarkMode ? darkColorThemes : colorThemes).map((theme) => (
+            <DropdownMenuItem
+              key={theme.name}
+              onClick={() => applyColorTheme(theme)}
+              className={cn(
+                "flex justify-between items-center",
+                currentTheme === theme.name && "bg-accent/50"
+              )}
+            >
+              <span>{theme.name.replace(" Dark", "")}</span>
+              <div className="flex">
+                <div 
+                  className="h-4 w-4 rounded-full border"
+                  style={{ background: `hsl(${theme.primary})` }} 
+                />
+                <div 
+                  className="h-4 w-4 rounded-full border -ml-1.5"
+                  style={{ background: `hsl(${theme.secondary})` }} 
+                />
+              </div>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };
 

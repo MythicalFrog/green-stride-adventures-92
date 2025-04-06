@@ -23,7 +23,7 @@ const Layout = () => {
         <Outlet />
         
         {/* Right side buttons */}
-        {/* Theme toggle button (first) */}
+        {/* Theme toggle buttons */}
         <div className="fixed bottom-72 right-4 z-50 flex items-center gap-2 group">
           <span className="bg-background/80 backdrop-blur-sm px-2 py-1 rounded-md border border-primary/20 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-2 group-hover:translate-x-0">
             Theme
@@ -31,7 +31,7 @@ const Layout = () => {
           <ThemeToggle />
         </div>
         
-        {/* Device toggle button (second) */}
+        {/* Device toggle button */}
         <div className="fixed bottom-60 right-4 z-50 flex items-center gap-2 group">
           <span className="bg-background/80 backdrop-blur-sm px-2 py-1 rounded-md border border-primary/20 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-2 group-hover:translate-x-0">
             Mobile
@@ -39,7 +39,7 @@ const Layout = () => {
           <DeviceToggle />
         </div>
         
-        {/* Leaderboard button (third) */}
+        {/* Leaderboard button */}
         <div className="fixed bottom-48 right-4 z-50 flex items-center gap-2 group">
           <span className="bg-background/80 backdrop-blur-sm px-2 py-1 rounded-md border border-primary/20 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-2 group-hover:translate-x-0">
             Leaderboard
@@ -56,7 +56,7 @@ const Layout = () => {
           </Link>
         </div>
         
-        {/* About button (fourth) */}
+        {/* About button */}
         <div className="fixed bottom-36 right-4 z-50 flex items-center gap-2 group">
           <span className="bg-background/80 backdrop-blur-sm px-2 py-1 rounded-md border border-primary/20 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-2 group-hover:translate-x-0">
             About
