@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 
 const EarthVisualization = () => {
@@ -16,6 +15,7 @@ const EarthVisualization = () => {
       const parentElement = canvas.parentElement;
       if (!parentElement) return;
       
+      // Set canvas size with some padding to prevent clipping
       canvas.width = parentElement.clientWidth;
       canvas.height = parentElement.clientHeight;
     };
@@ -24,7 +24,8 @@ const EarthVisualization = () => {
     resizeCanvas();
     
     // Animation properties
-    const earthRadius = Math.min(canvas.width, canvas.height) * 0.35;
+    // Reduce the radius slightly to prevent clipping at edges
+    const earthRadius = Math.min(canvas.width, canvas.height) * 0.33;
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     

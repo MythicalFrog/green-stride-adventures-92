@@ -1,36 +1,10 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import EarthVisualization from '../components/EarthVisualization';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 const Journey = () => {
-  const [displayText, setDisplayText] = useState("");
-  const phrases = ["EcoQuest", "Save Earth", "Green Travel"];
-  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  
-  useEffect(() => {
-    const typeWriter = () => {
-      const currentPhrase = phrases[currentPhraseIndex];
-      const shouldDelete = isDeleting;
-      
-      if (!shouldDelete && displayText.length < currentPhrase.length) {
-        setDisplayText(currentPhrase.substring(0, displayText.length + 1));
-      } else if (shouldDelete && displayText.length > 0) {
-        setDisplayText(displayText.substring(0, displayText.length - 1));
-      } else if (shouldDelete && displayText.length === 0) {
-        setIsDeleting(false);
-        setCurrentPhraseIndex((currentPhraseIndex + 1) % phrases.length);
-      } else {
-        setTimeout(() => setIsDeleting(true), 2000);
-      }
-    };
-    
-    const timer = setTimeout(typeWriter, isDeleting ? 100 : 150);
-    return () => clearTimeout(timer);
-  }, [displayText, currentPhraseIndex, isDeleting]);
-
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center min-h-[70vh]">
@@ -39,13 +13,18 @@ const Journey = () => {
         </div>
         
         <div className="flex flex-col items-center text-center order-1 md:order-2">
-          <h1 className="text-4xl font-bold mb-4">
-            <span className="text-green-500">Eco</span>
-            <span>Quest</span>
-          </h1>
-          
-          <div className="h-8 mb-4 overflow-hidden">
-            <h2 className="text-2xl font-medium">{displayText}<span className="animate-pulse">|</span></h2>
+          <div className="flex items-center mb-6">
+            <div className="w-16 h-16 mr-4">
+              <svg viewBox="0 0 100 100" className="w-full h-full">
+                <circle cx="50" cy="50" r="40" fill="rgba(72, 187, 120, 0.2)" />
+                <circle cx="50" cy="50" r="30" fill="rgba(72, 187, 120, 0.4)" />
+                <path d="M50 10 A40 40 0 0 1 90 50 A40 40 0 0 1 50 90 A40 40 0 0 1 10 50 A40 40 0 0 1 50 10 Z" fill="none" stroke="rgba(72, 187, 120, 0.8)" strokeWidth="2" />
+              </svg>
+            </div>
+            <h1 className="text-5xl font-bold">
+              <span className="text-green-500">Eco</span>
+              <span>Quest</span>
+            </h1>
           </div>
           
           <p className="text-muted-foreground mb-8 max-w-md">Make green choices, track your impact, earn rewards</p>
