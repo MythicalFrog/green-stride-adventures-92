@@ -317,7 +317,7 @@ const EarthVisualization = () => {
           const theta = (lng + rotationY * (180 / Math.PI)) * (Math.PI / 180);
           
           // Calculate 3D point
-          const { x, y, z } = sphericalToCartesian(radius, theta, phi);
+          const { x, y, z } = sphericalToCartesian(earthRadius, theta, phi);
           
           // Rotate around Earth's axis
           const rotatedX = x * Math.cos(rotationY) - z * Math.sin(rotationY);
@@ -379,6 +379,7 @@ const EarthVisualization = () => {
     <canvas 
       ref={canvasRef}
       className="absolute inset-0 w-full h-full"
+      style={{ maxWidth: '100%' }}
     />
   );
 };

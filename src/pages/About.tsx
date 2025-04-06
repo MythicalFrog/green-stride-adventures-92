@@ -20,7 +20,7 @@ const About = () => {
       </div>
       
       <div className="relative flex flex-col md:flex-row w-full mb-12 rounded-2xl overflow-hidden">
-        <div className="w-full md:w-1/2 h-80 relative">
+        <div className="w-full md:w-1/2 h-80 relative" style={{ minHeight: '320px' }}>
           <EarthVisualization />
         </div>
         
