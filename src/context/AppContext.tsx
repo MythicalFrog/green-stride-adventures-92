@@ -1,14 +1,21 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { mockUserStats } from '../utils/mockData';
-import { UserStats } from '../types';
+import { mockUserStats, generateMockJourneys, generateMockChallenges } from '../utils/mockData';
+import { UserStats, Journey, Challenge, TransportMode } from '../types';
+import { toast } from '@/components/ui/use-toast';
+import confetti from 'canvas-confetti';
 
 interface AppContextType {
   userStats: UserStats;
+  journeys: Journey[];
+  challenges: Challenge[];
+  currentJourney: Journey | null;
   incrementStats: (points: number, distance: number, carbonSaved: number) => void;
   completeChallenge: (points: number) => void;
   redeemReward: (id: string, points: number) => void;
   resetStats: () => void;
+  startJourney: (mode: TransportMode) => void;
+  endJourney: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -27,6 +34,9 @@ interface AppProviderProps {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   const [userStats, setUserStats] = useState<UserStats>(mockUserStats);
+  const [journeys, setJourneys] = useState<Journey[]>(generateMockJourneys());
+  const [challenges, setChallenges] = useState<Challenge[]>(generateMockChallenges());
+  const [currentJourney, setCurrentJourney] = useState<Journey | null>(null);
 
   const incrementStats = (points: number, distance: number, carbonSaved: number) => {
     setUserStats((prevStats) => ({
@@ -34,9 +44,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       totalPoints: prevStats.totalPoints + points,
       totalDistance: prevStats.totalDistance + distance,
       totalCarbonSaved: prevStats.totalCarbonSaved + carbonSaved,
-      level: calculateLevel(prevStats.totalPoints + points),
-      streakDays: prevStats.streakDays,
-      activeDays: prevStats.activeDays
+      level: calculateLevel(prevStats.totalPoints + points)
     }));
   };
 
@@ -54,6 +62,19 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       totalPoints: prevStats.totalPoints - pointsCost,
       redeemedRewards: [...prevStats.redeemedRewards, id]
     }));
+    
+    // Display success message and confetti
+    toast({
+      title: "Reward Redeemed!",
+      description: "Congratulations on helping save the planet!",
+    });
+    
+    // Trigger confetti animation
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
   };
 
   const resetStats = () => {
@@ -64,13 +85,98 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     return Math.floor(points / 500) + 1;
   };
 
+  const startJourney = (mode: TransportMode) => {
+    const now = new Date();
+    const newJourney: Journey = {
+      id: `journey-${Date.now()}`,
+      mode,
+      startTime: now.toISOString(),
+      endTime: '',
+      distance: 0,
+      carbonSaved: 0,
+      points: 0,
+      completed: false,
+      startLocation: {
+        lat: 40.7128 + (Math.random() * 0.02 - 0.01),
+        lng: -74.0060 + (Math.random() * 0.02 - 0.01),
+      },
+      endLocation: {
+        lat: 0,
+        lng: 0,
+      }
+    };
+    
+    setCurrentJourney(newJourney);
+    toast({
+      title: `${mode.charAt(0).toUpperCase() + mode.slice(1)} Journey Started`,
+      description: "We're tracking your eco-friendly trip!",
+    });
+  };
+
+  const endJourney = () => {
+    if (!currentJourney) return;
+    
+    const now = new Date();
+    const startTime = new Date(currentJourney.startTime);
+    const durationMs = now.getTime() - startTime.getTime();
+    const durationMinutes = durationMs / (1000 * 60);
+    
+    // Calculate simulated distance based on duration and mode
+    const speed = currentJourney.mode === 'walking' ? 5 : // km/h
+                 currentJourney.mode === 'biking' ? 15 :
+                 currentJourney.mode === 'public' ? 25 : 40; // car
+    
+    const distanceKm = (speed * durationMinutes) / 60;
+    const distanceM = Math.round(distanceKm * 1000);
+    
+    // Calculate carbon saved (kg) - rough estimate
+    const carbonSaved = currentJourney.mode !== 'car' ? distanceKm * 0.12 : 0;
+    
+    // Calculate points
+    const points = currentJourney.mode === 'walking' ? Math.floor(distanceM / 100) :
+                  currentJourney.mode === 'biking' ? Math.floor(distanceM / 200) :
+                  currentJourney.mode === 'public' ? Math.floor(distanceM / 300) : 0;
+    
+    const completedJourney: Journey = {
+      ...currentJourney,
+      endTime: now.toISOString(),
+      distance: distanceM,
+      carbonSaved,
+      points,
+      completed: true,
+      endLocation: {
+        lat: 40.7128 + (Math.random() * 0.02 - 0.01),
+        lng: -74.0060 + (Math.random() * 0.02 - 0.01),
+      }
+    };
+    
+    // Update journeys list
+    setJourneys(prev => [completedJourney, ...prev]);
+    
+    // Update stats
+    incrementStats(points, distanceM, carbonSaved);
+    
+    // Reset current journey
+    setCurrentJourney(null);
+    
+    toast({
+      title: "Journey Completed!",
+      description: `You earned ${points} points and saved ${carbonSaved.toFixed(2)}kg of CO2!`,
+    });
+  };
+
   return (
     <AppContext.Provider value={{
       userStats,
+      journeys,
+      challenges,
+      currentJourney,
       incrementStats,
       completeChallenge,
       redeemReward,
-      resetStats
+      resetStats,
+      startJourney,
+      endJourney
     }}>
       {children}
     </AppContext.Provider>

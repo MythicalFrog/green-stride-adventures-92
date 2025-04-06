@@ -1,5 +1,16 @@
 
-import { Journey, Challenge, TransportMode } from '../types';
+import { Journey, Challenge, TransportMode, UserStats } from '../types';
+
+// User stats mock data
+export const mockUserStats: UserStats = {
+  totalPoints: 1250,
+  totalDistance: 25000, // in meters
+  totalCarbonSaved: 12.5, // in kg
+  level: 3,
+  streakDays: 5,
+  activeDays: 14,
+  redeemedRewards: []
+};
 
 // Function to generate fake journeys
 export const generateMockJourneys = (): Journey[] => {
