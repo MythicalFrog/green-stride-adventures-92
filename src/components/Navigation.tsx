@@ -42,8 +42,8 @@ const Navigation = () => {
     },
   ];
 
-  // Default to showing labels if isPhoneView is not defined
-  const shouldShowLabels = userStats?.isPhoneView === undefined || userStats?.isPhoneView === false;
+  // Default to showing labels if there is no isPhoneView property
+  const shouldShowLabels = userStats && 'isPhoneView' in userStats ? !userStats.isPhoneView : true;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-md border-t py-2 px-4 z-10 dark:bg-gray-900/80">
