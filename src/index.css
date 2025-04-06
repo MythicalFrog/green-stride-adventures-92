@@ -17,8 +17,8 @@
     --primary: 142 55% 50%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 40 80% 80%;
-    --secondary-foreground: 40 10% 20%;
+    --secondary: 200 80% 80%;
+    --secondary-foreground: 200 10% 20%;
 
     --muted: 142 10% 92%;
     --muted-foreground: 142 5% 40%;
@@ -47,28 +47,28 @@
 
   .dark {
     --background: 142 15% 15%;
-    --foreground: 142 10% 90%;
+    --foreground: 0 0% 98%;
 
     --card: 142 15% 20%;
-    --card-foreground: 142 10% 90%;
+    --card-foreground: 0 0% 98%;
 
     --popover: 142 15% 20%;
-    --popover-foreground: 142 10% 90%;
+    --popover-foreground: 0 0% 98%;
 
     --primary: 142 50% 50%;
-    --primary-foreground: 142 10% 90%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 40 50% 30%;
-    --secondary-foreground: 40 10% 90%;
+    --secondary: 200 50% 30%;
+    --secondary-foreground: 0 0% 98%;
 
     --muted: 142 15% 25%;
-    --muted-foreground: 142 10% 70%;
+    --muted-foreground: 0 0% 90%;
 
     --accent: 200 50% 40%;
-    --accent-foreground: 200 10% 90%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 90%;
+    --destructive-foreground: 0 0% 98%;
 
     --border: 142 15% 30%;
     --input: 142 15% 30%;
@@ -107,5 +107,28 @@
   
   .transparent-card {
     @apply bg-transparent backdrop-blur-sm border border-primary/20;
+  }
+
+  .animate-typing {
+    animation: typing 4s steps(20) infinite;
+  }
+
+  .confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+}
+
+@keyframes typing {
+  0%, 90%, 100% {
+    width: 0;
+  }
+  30%, 60% {
+    width: 100%;
   }
 }

@@ -1,362 +1,78 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Journey, Challenge, UserStats, TransportMode } from '../types';
-import { toast } from '../components/ui/use-toast';
-import { generateMockChallenges, generateMockJourneys } from '../utils/mockData';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { mockUserStats } from '../utils/mockData';
+import { UserStats } from '../types';
 
 interface AppContextType {
-  currentJourney: Journey | null;
-  journeys: Journey[];
-  challenges: Challenge[];
   userStats: UserStats;
-  startJourney: (mode: TransportMode) => void;
-  endJourney: () => void;
-  completeChallenge: (challengeId: string) => void;
+  incrementStats: (points: number, distance: number, carbonSaved: number) => void;
+  completeChallenge: (points: number) => void;
+  redeemReward: (id: string, points: number) => void;
+  resetStats: () => void;
 }
-
-const initialUserStats: UserStats = {
-  totalDistance: 0,
-  totalCarbonSaved: 0,
-  totalPoints: 0,
-  streakDays: 5, // Starting with a 5-day streak for better demo
-  achievements: [
-    {
-      id: 'first-steps',
-      title: 'First Steps',
-      description: 'Start your first journey',
-      icon: 'trophy',
-      unlocked: false,
-    },
-    {
-      id: 'carbon-saver',
-      title: 'Carbon Saver',
-      description: 'Save 5kg of CO2',
-      icon: 'leaf',
-      unlocked: false,
-    },
-    {
-      id: 'streak-3',
-      title: 'Consistency',
-      description: 'Maintain a 3-day streak',
-      icon: 'flame',
-      unlocked: true,
-      unlockedAt: new Date().toISOString(),
-    }
-  ],
-  level: 1,
-};
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentJourney, setCurrentJourney] = useState<Journey | null>(null);
-  const [journeys, setJourneys] = useState<Journey[]>([]);
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
-  const [userStats, setUserStats] = useState<UserStats>(initialUserStats);
+export const useApp = (): AppContextType => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error('useApp must be used within an AppProvider');
+  }
+  return context;
+};
 
-  useEffect(() => {
-    // Load mock data on initial mount
-    const mockJourneys = generateMockJourneys();
-    const mockChallenges = generateMockChallenges();
-    
-    setJourneys(mockJourneys);
-    setChallenges(mockChallenges);
-    
-    // Calculate initial stats based on mock journeys
-    const stats = mockJourneys.reduce((acc, journey) => {
-      if (journey.completed) {
-        acc.totalDistance += journey.distance;
-        acc.totalCarbonSaved += journey.carbonSaved;
-        acc.totalPoints += journey.points;
-      }
-      return acc;
-    }, {
-      ...initialUserStats,
-      totalDistance: 0,
-      totalCarbonSaved: 0,
-      totalPoints: 0,
-    });
-    
-    // Update achievements based on stats
-    if (stats.totalCarbonSaved >= 5) {
-      stats.achievements = stats.achievements.map(achievement => 
-        achievement.id === 'carbon-saver' 
-          ? { ...achievement, unlocked: true, unlockedAt: new Date().toISOString() }
-          : achievement
-      );
-    }
-    
-    setUserStats(stats);
-    
-    // Check for streak maintenance
-    const checkStreak = () => {
-      const today = new Date().toISOString().split('T')[0];
-      const lastActive = localStorage.getItem('lastActiveDay');
-      
-      if (lastActive && lastActive !== today) {
-        const lastActiveDate = new Date(lastActive);
-        const todayDate = new Date(today);
-        const diffDays = Math.round(Math.abs((todayDate.getTime() - lastActiveDate.getTime()) / (24 * 60 * 60 * 1000)));
-        
-        if (diffDays === 1) {
-          // Streak continues
-          setUserStats(prevStats => ({
-            ...prevStats,
-            streakDays: prevStats.streakDays + 1
-          }));
-          
-          // Check for streak achievements
-          if ((prevStats.streakDays + 1) >= 3) {
-            const updatedAchievements = prevStats.achievements.map(a => 
-              a.id === 'streak-3' ? {...a, unlocked: true, unlockedAt: new Date().toISOString()} : a
-            );
-            
-            return {...prevStats, streakDays: prevStats.streakDays + 1, achievements: updatedAchievements};
-          }
-          
-          return {...prevStats, streakDays: prevStats.streakDays + 1};
-        } else if (diffDays > 1) {
-          // Streak broken
-          return {...prevStats, streakDays: 1};
-        }
-      }
-      
-      return prevStats;
-    };
-    
-    // Set today as active day
-    localStorage.setItem('lastActiveDay', new Date().toISOString().split('T')[0]);
-    
-  }, []);
+interface AppProviderProps {
+  children: ReactNode;
+}
 
-  const calculateCarbonSaved = (mode: TransportMode, distance: number): number => {
-    // Simplified calculation:
-    // - Car: 120g CO2 per km
-    // - Walking/Biking: 0g CO2 per km (but saves compared to driving)
-    const carEmissionPerKm = 0.12; // kg CO2 per km
-    
-    switch (mode) {
-      case 'walking':
-      case 'biking':
-        // Carbon saved compared to driving the same distance
-        return (distance / 1000) * carEmissionPerKm;
-      case 'car':
-        // No carbon saved when driving
-        return 0;
-      case 'public':
-        // Public transport saves some carbon compared to driving
-        return (distance / 1000) * carEmissionPerKm * 0.6;
-      default:
-        return 0;
-    }
-  };
-  
-  const calculatePoints = (mode: TransportMode, distance: number): number => {
-    // Points system based on mode and distance
-    switch (mode) {
-      case 'walking':
-        return Math.floor(distance / 100); // 1 point per 100m walked
-      case 'biking':
-        return Math.floor(distance / 200); // 1 point per 200m biked
-      case 'car':
-        return 0; // No points for driving
-      case 'public':
-        return Math.floor(distance / 300); // 1 point per 300m of public transport
-      default:
-        return 0;
-    }
-  };
+export const AppProvider = ({ children }: AppProviderProps) => {
+  const [userStats, setUserStats] = useState<UserStats>(mockUserStats);
 
-  const startJourney = (mode: TransportMode) => {
-    if (currentJourney) {
-      toast({
-        title: "Journey already in progress",
-        description: "Please end your current journey before starting a new one.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const newJourney: Journey = {
-      id: `journey-${Date.now()}`,
-      mode,
-      startTime: new Date().toISOString(),
-      distance: 0,
-      carbonSaved: 0,
-      points: 0,
-      completed: false,
-      startLocation: {
-        lat: 40.7128,  // Example: New York coordinates
-        lng: -74.0060,
-      }
-    };
-
-    setCurrentJourney(newJourney);
-    
-    // Update streak - mark today as active
-    localStorage.setItem('lastActiveDay', new Date().toISOString().split('T')[0]);
-    
-    toast({
-      title: `${mode.charAt(0).toUpperCase() + mode.slice(1)} journey started`,
-      description: "Your eco-friendly journey is now being tracked!",
-    });
-  };
-
-  const endJourney = () => {
-    if (!currentJourney) {
-      toast({
-        title: "No journey in progress",
-        description: "Please start a journey before ending one.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // In a real app, we'd calculate the actual distance traveled
-    // For this demo, we'll use a random distance between 500m and 5km
-    const distance = Math.floor(Math.random() * 4500) + 500;
-    
-    const carbonSaved = calculateCarbonSaved(currentJourney.mode, distance);
-    const points = calculatePoints(currentJourney.mode, distance);
-    
-    const completedJourney: Journey = {
-      ...currentJourney,
-      endTime: new Date().toISOString(),
-      distance,
-      carbonSaved,
-      points,
-      completed: true,
-      endLocation: {
-        lat: (currentJourney.startLocation?.lat || 0) + (Math.random() * 0.01),
-        lng: (currentJourney.startLocation?.lng || 0) + (Math.random() * 0.01),
-      }
-    };
-
-    setJourneys(prev => [completedJourney, ...prev]);
-    setCurrentJourney(null);
-
-    // Update user stats
-    setUserStats(prev => {
-      const updated = {
-        ...prev,
-        totalDistance: prev.totalDistance + distance,
-        totalCarbonSaved: prev.totalCarbonSaved + carbonSaved,
-        totalPoints: prev.totalPoints + points,
-      };
-      
-      // Check for achievements
-      const updatedAchievements = [...prev.achievements];
-      
-      // First steps achievement
-      if (!updatedAchievements.find(a => a.id === 'first-steps')?.unlocked) {
-        updatedAchievements.forEach((achievement, index) => {
-          if (achievement.id === 'first-steps') {
-            updatedAchievements[index] = {
-              ...achievement,
-              unlocked: true,
-              unlockedAt: new Date().toISOString()
-            };
-            
-            toast({
-              title: "Achievement Unlocked!",
-              description: "First Steps: Start your first journey",
-            });
-          }
-        });
-      }
-      
-      // Carbon saver achievement
-      if (!updatedAchievements.find(a => a.id === 'carbon-saver')?.unlocked && 
-          updated.totalCarbonSaved >= 5) {
-        updatedAchievements.forEach((achievement, index) => {
-          if (achievement.id === 'carbon-saver') {
-            updatedAchievements[index] = {
-              ...achievement,
-              unlocked: true,
-              unlockedAt: new Date().toISOString()
-            };
-            
-            toast({
-              title: "Achievement Unlocked!",
-              description: "Carbon Saver: Save 5kg of CO2",
-            });
-          }
-        });
-      }
-      
-      return {
-        ...updated,
-        achievements: updatedAchievements
-      };
-    });
-
-    toast({
-      title: "Journey Completed!",
-      description: `You earned ${points} points and saved ${carbonSaved.toFixed(2)}kg of CO2.`,
-    });
-  };
-
-  const completeChallenge = (challengeId: string) => {
-    const challenge = challenges.find(c => c.id === challengeId);
-    
-    if (!challenge) {
-      toast({
-        title: "Challenge not found",
-        description: "The challenge you're trying to complete doesn't exist.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (challenge.completed) {
-      toast({
-        title: "Challenge already completed",
-        description: "You've already completed this challenge.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    // Mark challenge as completed
-    setChallenges(prev => prev.map(c => 
-      c.id === challengeId ? { ...c, completed: true } : c
-    ));
-    
-    // Update user stats
-    const carbonSaved = calculateCarbonSaved(challenge.mode, challenge.distance);
-    
-    setUserStats(prev => ({
-      ...prev,
-      totalDistance: prev.totalDistance + challenge.distance,
-      totalCarbonSaved: prev.totalCarbonSaved + carbonSaved,
-      totalPoints: prev.totalPoints + challenge.points,
+  const incrementStats = (points: number, distance: number, carbonSaved: number) => {
+    setUserStats((prevStats) => ({
+      ...prevStats,
+      totalPoints: prevStats.totalPoints + points,
+      totalDistance: prevStats.totalDistance + distance,
+      totalCarbonSaved: prevStats.totalCarbonSaved + carbonSaved,
+      level: calculateLevel(prevStats.totalPoints + points),
+      streakDays: prevStats.streakDays,
+      activeDays: prevStats.activeDays
     }));
-    
-    toast({
-      title: "Challenge Completed!",
-      description: `You earned ${challenge.points} points!`,
-    });
+  };
+
+  const completeChallenge = (points: number) => {
+    setUserStats((prevStats) => ({
+      ...prevStats,
+      totalPoints: prevStats.totalPoints + points,
+      level: calculateLevel(prevStats.totalPoints + points),
+    }));
+  };
+
+  const redeemReward = (id: string, pointsCost: number) => {
+    setUserStats((prevStats) => ({
+      ...prevStats,
+      totalPoints: prevStats.totalPoints - pointsCost,
+      redeemedRewards: [...prevStats.redeemedRewards, id]
+    }));
+  };
+
+  const resetStats = () => {
+    setUserStats(mockUserStats);
+  };
+
+  const calculateLevel = (points: number): number => {
+    return Math.floor(points / 500) + 1;
   };
 
   return (
     <AppContext.Provider value={{
-      currentJourney,
-      journeys,
-      challenges,
       userStats,
-      startJourney,
-      endJourney,
+      incrementStats,
       completeChallenge,
+      redeemReward,
+      resetStats
     }}>
       {children}
     </AppContext.Provider>
   );
-};
-
-export const useApp = (): AppContextType => {
-  const context = useContext(AppContext);
-  if (context === undefined) {
-    throw new Error('useApp must be used within an AppProvider');
-  }
-  return context;
 };

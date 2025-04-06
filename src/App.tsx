@@ -11,6 +11,9 @@ import MapView from "./components/MapView";
 import StatsPage from "./pages/Stats";
 import RewardsPage from "./pages/Rewards";
 import NotFound from "./pages/NotFound";
+import About from "./pages/About";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +30,10 @@ const App = () => (
             <Route path="map" element={<MapView />} />
             <Route path="stats" element={<StatsPage />} />
             <Route path="rewards" element={<RewardsPage />} />
+            <Route path="about" element={<About />} />
           </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

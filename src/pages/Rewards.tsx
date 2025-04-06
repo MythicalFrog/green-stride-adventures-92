@@ -1,11 +1,16 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useApp } from '../context/AppContext';
-import { Trophy, Lock, CheckCircle } from 'lucide-react';
+import { Trophy, Lock, CheckCircle, X } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
+import { toast } from '@/hooks/use-toast';
+import confetti from 'canvas-confetti';
 
 const RewardsPage = () => {
-  const { userStats } = useApp();
+  const { userStats, redeemReward } = useApp();
+  const [showRewardDialog, setShowRewardDialog] = useState(false);
+  const [currentReward, setCurrentReward] = useState<any>(null);
   
   const rewards = [
     {
@@ -125,6 +130,26 @@ const RewardsPage = () => {
     }
   ];
   
+  const handleRedeemReward = (coupon: any) => {
+    if (!coupon.canAfford) return;
+    
+    redeemReward(coupon.id, coupon.pointsCost);
+    setCurrentReward(coupon);
+    setShowRewardDialog(true);
+    
+    // Trigger confetti
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+    
+    toast({
+      title: "Reward Redeemed!",
+      description: `You've successfully redeemed ${coupon.title}`,
+    });
+  };
+  
   return (
     <div className="container mx-auto px-4 py-8 mb-16 max-w-4xl">
       <div className="flex items-center justify-between mb-6">
@@ -216,6 +241,7 @@ const RewardsPage = () => {
                         : 'bg-muted text-muted-foreground'
                     }`}
                     disabled={!coupon.canAfford}
+                    onClick={() => handleRedeemReward(coupon)}
                   >
                     {coupon.canAfford ? 'Redeem' : 'Not enough points'}
                   </button>
@@ -225,6 +251,27 @@ const RewardsPage = () => {
           </div>
         </CardContent>
       </Card>
+      
+      <Dialog open={showRewardDialog} onOpenChange={setShowRewardDialog}>
+        <DialogContent className="sm:max-w-md bg-background">
+          <DialogTitle className="text-center text-xl font-bold">Congratulations! 🎉</DialogTitle>
+          <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </DialogClose>
+          
+          {currentReward && (
+            <div className="py-6 text-center">
+              <div className="text-5xl mb-4">{currentReward.icon}</div>
+              <h3 className="text-lg font-medium mb-2">{currentReward.title}</h3>
+              <p className="text-muted-foreground mb-4">Thank you for helping save our planet!</p>
+              <p className="text-sm text-green-600 dark:text-green-400 font-medium">
+                You've contributed to reducing carbon emissions and making Earth a better place.
+              </p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
