@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Leaf, Map, BarChart, Trophy, Compass, Info, Route, Medal } from 'lucide-react';
+import { Leaf, Map, BarChart, Trophy, Compass, Route } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '../context/AppContext';
 
@@ -15,7 +15,6 @@ const Navigation = () => {
       name: 'Journey',
       path: '/journey',
       icon: <Route className="h-5 w-5" />,
-      className: "mr-auto" // Add auto margin to push Journey far left
     },
     {
       name: 'Home',
@@ -42,17 +41,6 @@ const Navigation = () => {
       path: '/rewards',
       icon: <Trophy className="h-5 w-5" />,
     },
-    {
-      name: 'Leaderboard',
-      path: '/leaderboard',
-      icon: <Medal className="h-5 w-5" />,
-    },
-    {
-      name: 'About',
-      path: '/about',
-      icon: <Info className="h-5 w-5" />,
-      className: "ml-auto" // Add auto margin to push About far right
-    },
   ];
 
   return (
@@ -65,7 +53,6 @@ const Navigation = () => {
             className={cn(
               "flex flex-col items-center p-2 rounded-md transition-colors",
               location.pathname === item.path ? "text-primary" : "text-muted-foreground hover:text-foreground",
-              item.className // Apply the custom spacing class
             )}
           >
             {item.icon}

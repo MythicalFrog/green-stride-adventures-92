@@ -13,8 +13,8 @@ const Layout = () => {
     <AppProvider>
       <div className="min-h-screen pb-20 dark:bg-gray-900 transition-colors duration-300">
         <Outlet />
-        <DeviceToggle />
         <ThemeToggle />
+        <DeviceToggle />
         <JourneyControls />
         <Navigation />
         <Toaster />
