@@ -2,10 +2,9 @@
 import React from 'react';
 import EarthVisualization from '../components/EarthVisualization';
 import { useApp } from '../context/AppContext';
-import { Leaf, Route, Globe, Users } from 'lucide-react';
+import { Leaf, Route, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 
 const Journey = () => {
   const { currentJourney } = useApp();
@@ -52,7 +51,7 @@ const Journey = () => {
   
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center min-h-[70vh] mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center min-h-[70vh]">
         <div className="relative h-[400px] w-full order-2 md:order-1">
           <EarthVisualization />
         </div>
@@ -105,88 +104,6 @@ const Journey = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      
-      {/* Who We Are Section */}
-      <div className="mb-16">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold inline-flex items-center">
-            <Users className="mr-2" /> Who We Are
-          </h2>
-          <p className="text-muted-foreground mt-2">
-            Meet the passionate team behind EcoQuest
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="overflow-hidden">
-            <div className="h-48 bg-gray-200 dark:bg-gray-700">
-              <img 
-                src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" 
-                alt="Team member" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <CardContent className="p-4">
-              <h3 className="font-bold text-lg">Alex Reynolds</h3>
-              <p className="text-sm text-muted-foreground">Lead Developer</p>
-              <p className="text-xs mt-2">
-                Passionate about technology that makes a positive impact on our planet.
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card className="overflow-hidden">
-            <div className="h-48 bg-gray-200 dark:bg-gray-700">
-              <img 
-                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
-                alt="Team member" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <CardContent className="p-4">
-              <h3 className="font-bold text-lg">Maya Johnson</h3>
-              <p className="text-sm text-muted-foreground">Environmental Scientist</p>
-              <p className="text-xs mt-2">
-                Researches sustainable transportation solutions for urban environments.
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card className="overflow-hidden">
-            <div className="h-48 bg-gray-200 dark:bg-gray-700">
-              <img 
-                src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" 
-                alt="Team member" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <CardContent className="p-4">
-              <h3 className="font-bold text-lg">Carlos Martinez</h3>
-              <p className="text-sm text-muted-foreground">UX/UI Designer</p>
-              <p className="text-xs mt-2">
-                Creates intuitive interfaces that make eco-friendly choices easier for everyone.
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card className="overflow-hidden">
-            <div className="h-48 bg-gray-200 dark:bg-gray-700">
-              <img 
-                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" 
-                alt="Team member" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <CardContent className="p-4">
-              <h3 className="font-bold text-lg">Priya Sharma</h3>
-              <p className="text-sm text-muted-foreground">Community Manager</p>
-              <p className="text-xs mt-2">
-                Builds partnerships with eco-conscious businesses and organizations.
-              </p>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
