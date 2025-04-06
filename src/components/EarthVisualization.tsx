@@ -28,34 +28,34 @@ const EarthVisualization = () => {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     
-    // Create Earth texture
-    const earthImg = new Image();
-    earthImg.src = 'https://assets.codepen.io/123456/earth-map.jpg'; // Fallback to a simple color if image fails to load
-    
-    // Create cloud texture (optional)
-    const cloudsImg = new Image();
-    cloudsImg.src = 'https://assets.codepen.io/123456/earth-clouds.png';
-    
-    // Rotation angles
+    // Rotation angles and tilt
     let rotationY = 0;
+    let rotationX = Math.PI * 0.15; // Add tilt angle (around 23.5 degrees)
     const rotationSpeed = 0.005;
     
     // Points for orbit lines and satellites
     const points = [];
     const orbits = [];
     
+    // Inner Earth layers
+    const innerLayers = [
+      { radius: earthRadius * 0.6, color: '#e67e22', name: 'Core' },  // Orange/yellow for core
+      { radius: earthRadius * 0.75, color: '#c0392b', name: 'Mantle' },  // Red for mantle
+      { radius: earthRadius * 0.9, color: '#7f8c8d', name: 'Crust' }   // Gray for crust
+    ];
+    
     // Create points (satellites)
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 20; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const distance = earthRadius * (1.2 + Math.random() * 0.5);
+      const inclination = (Math.random() - 0.5) * Math.PI * 0.5; // Orbital inclination
+      const distance = earthRadius * (1.2 + Math.random() * 0.6);
       const speed = 0.0005 + Math.random() * 0.001;
       const size = 1 + Math.random() * 3;
       const hue = 120 + Math.random() * 60; // Green to teal
       
       points.push({
-        x: centerX + Math.cos(angle) * distance,
-        y: centerY + Math.sin(angle) * distance,
         angle,
+        inclination,
         distance,
         speed,
         size,
@@ -69,62 +69,199 @@ const EarthVisualization = () => {
       const segments = 50;
       const speed = 0.0002 + i * 0.0001;
       const hue = 140 + i * 10;
+      const inclination = (Math.random() - 0.5) * Math.PI * 0.3; // Orbital inclination
       
       orbits.push({
         radius,
         segments,
         speed,
         hue,
+        inclination,
         offset: Math.random() * Math.PI * 2,
       });
     }
     
-    // Draw rotating Earth with texture
+    // Convert 3D coordinates to 2D with perspective
+    const projectPoint = (x: number, y: number, z: number) => {
+      // Apply perspective
+      const scale = 400 / (400 - z);
+      return {
+        x: centerX + x * scale,
+        y: centerY + y * scale,
+        z: z,
+        visible: z > -earthRadius * 0.5
+      };
+    };
+    
+    // Convert spherical to cartesian coordinates
+    const sphericalToCartesian = (radius: number, theta: number, phi: number) => {
+      // theta: longitude, phi: latitude
+      return {
+        x: radius * Math.sin(phi) * Math.cos(theta),
+        y: radius * Math.cos(phi),
+        z: radius * Math.sin(phi) * Math.sin(theta),
+      };
+    };
+    
+    // Draw rotating Earth with texture and internal structure
     const drawEarth = (time: number) => {
       rotationY += rotationSpeed;
       
-      // Clear background for Earth area
+      // Clear background
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw orbit lines with inclination
+      orbits.forEach(orbit => {
+        ctx.beginPath();
+        
+        for (let i = 0; i <= orbit.segments; i++) {
+          const angle = (i / orbit.segments) * Math.PI * 2 + orbit.offset + time * orbit.speed;
+          
+          // Calculate point on inclined orbit
+          const { x, y, z } = sphericalToCartesian(
+            orbit.radius,
+            angle,
+            Math.PI / 2 + orbit.inclination * Math.sin(angle)
+          );
+          
+          // Rotate around Earth's axis
+          const rotatedX = x * Math.cos(rotationY) - z * Math.sin(rotationY);
+          const rotatedZ = x * Math.sin(rotationY) + z * Math.cos(rotationY);
+          
+          // Apply Earth's tilt
+          const tiltedY = y * Math.cos(rotationX) - rotatedZ * Math.sin(rotationX);
+          const tiltedZ = y * Math.sin(rotationX) + rotatedZ * Math.cos(rotationX);
+          
+          const projected = projectPoint(rotatedX, tiltedY, tiltedZ);
+          
+          if (i === 0) {
+            ctx.moveTo(projected.x, projected.y);
+          } else {
+            ctx.lineTo(projected.x, projected.y);
+          }
+        }
+        
+        ctx.strokeStyle = `hsla(${orbit.hue}, 80%, 60%, 0.3)`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+      
+      // Draw and update points (satellites)
+      points.forEach(point => {
+        // Update position
+        point.angle += point.speed;
+        
+        // Calculate 3D position with inclination
+        const { x, y, z } = sphericalToCartesian(
+          point.distance,
+          point.angle,
+          Math.PI / 2 + point.inclination * Math.sin(point.angle)
+        );
+        
+        // Rotate around Earth's axis
+        const rotatedX = x * Math.cos(rotationY) - z * Math.sin(rotationY);
+        const rotatedZ = x * Math.sin(rotationY) + z * Math.cos(rotationY);
+        
+        // Apply Earth's tilt
+        const tiltedY = y * Math.cos(rotationX) - rotatedZ * Math.sin(rotationX);
+        const tiltedZ = y * Math.sin(rotationX) + rotatedZ * Math.cos(rotationX);
+        
+        const projected = projectPoint(rotatedX, tiltedY, tiltedZ);
+        
+        if (projected.visible) {
+          // Draw point
+          ctx.beginPath();
+          ctx.arc(projected.x, projected.y, point.size, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${point.hue}, 70%, 60%, 0.8)`;
+          ctx.fill();
+          
+          // Draw glow
+          ctx.beginPath();
+          ctx.arc(projected.x, projected.y, point.size * 2, 0, Math.PI * 2);
+          const gradient = ctx.createRadialGradient(
+            projected.x, projected.y, 0,
+            projected.x, projected.y, point.size * 2
+          );
+          gradient.addColorStop(0, `hsla(${point.hue}, 70%, 60%, 0.4)`);
+          gradient.addColorStop(1, `hsla(${point.hue}, 70%, 60%, 0)`);
+          ctx.fillStyle = gradient;
+          ctx.fill();
+        }
+      });
+      
+      // Draw Earth's cross-section (half-cut Earth showing layers)
+      ctx.save();
+      
+      // Draw Earth's internal layers
+      innerLayers.forEach(layer => {
+        ctx.beginPath();
+        
+        // Draw layers as a semicircle first
+        for (let phi = Math.PI * 0.5; phi <= Math.PI * 1.5; phi += Math.PI / 50) {
+          for (let theta = 0; theta <= Math.PI; theta += Math.PI / 50) {
+            const { x, y, z } = sphericalToCartesian(layer.radius, theta, phi);
+            
+            // Rotate around Earth's axis
+            const rotatedX = x * Math.cos(rotationY) - z * Math.sin(rotationY);
+            const rotatedZ = x * Math.sin(rotationY) + z * Math.cos(rotationY);
+            
+            // Apply Earth's tilt
+            const tiltedY = y * Math.cos(rotationX) - rotatedZ * Math.sin(rotationX);
+            const tiltedZ = y * Math.sin(rotationX) + rotatedZ * Math.cos(rotationX);
+            
+            const projected = projectPoint(rotatedX, tiltedY, tiltedZ);
+            
+            if (projected.visible) {
+              if (theta === 0 && phi === Math.PI * 0.5) {
+                ctx.moveTo(projected.x, projected.y);
+              } else {
+                ctx.lineTo(projected.x, projected.y);
+              }
+            }
+          }
+        }
+        
+        ctx.fillStyle = layer.color;
+        ctx.globalAlpha = 0.5;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      });
+      
+      ctx.restore();
+      
+      // Draw Earth's surface
       ctx.save();
       ctx.beginPath();
-      ctx.arc(centerX, centerY, earthRadius, 0, Math.PI * 2);
-      ctx.clip();
       
-      // Draw basic Earth gradient as fallback
-      const earthGradient = ctx.createRadialGradient(
-        centerX, centerY, 0,
-        centerX, centerY, earthRadius
-      );
-      earthGradient.addColorStop(0, 'rgba(64, 180, 230, 0.9)');
-      earthGradient.addColorStop(0.5, 'rgba(30, 130, 200, 0.8)');
-      earthGradient.addColorStop(1, 'rgba(0, 100, 160, 0.7)');
-      
-      ctx.fillStyle = earthGradient;
-      ctx.fillRect(centerX - earthRadius, centerY - earthRadius, earthRadius * 2, earthRadius * 2);
-      
-      // Draw continents (simplified approach for 2D canvas)
-      for (let lat = -90; lat < 90; lat += 15) {
-        for (let lng = -180; lng < 180; lng += 15) {
-          // Convert lat/lng to 3D coordinates
-          const phi = (90 - lat) * (Math.PI / 180);
-          const theta = (lng + rotationY * (180 / Math.PI)) * (Math.PI / 180);
+      // Draw surface as a sphere
+      for (let phi = 0; phi <= Math.PI; phi += Math.PI / 30) {
+        for (let theta = 0; theta <= Math.PI * 2; theta += Math.PI / 30) {
+          const { x, y, z } = sphericalToCartesian(earthRadius, theta, phi);
           
-          // Calculate 3D point
-          const x = -earthRadius * Math.sin(phi) * Math.cos(theta);
-          const y = earthRadius * Math.cos(phi);
-          const z = earthRadius * Math.sin(phi) * Math.sin(theta);
+          // Rotate around Earth's axis
+          const rotatedX = x * Math.cos(rotationY) - z * Math.sin(rotationY);
+          const rotatedZ = x * Math.sin(rotationY) + z * Math.cos(rotationY);
           
-          // Only draw if point is on the visible hemisphere (z > 0)
-          if (z > 0) {
-            // Project to 2D
-            const scale = 400 / (400 - z); // Perspective scale
-            const projX = centerX + x * scale;
-            const projY = centerY + y * scale;
-            
-            // Randomize continent colors
-            if (Math.random() > 0.6) {
+          // Apply Earth's tilt
+          const tiltedY = y * Math.cos(rotationX) - rotatedZ * Math.sin(rotationX);
+          const tiltedZ = y * Math.sin(rotationX) + rotatedZ * Math.cos(rotationX);
+          
+          const projected = projectPoint(rotatedX, tiltedY, tiltedZ);
+          
+          if (projected.visible) {
+            // Continents (simplified approach)
+            if (Math.random() > 0.75) {
               ctx.fillStyle = 'rgba(34, 139, 34, 0.8)'; // Green for land
               ctx.beginPath();
-              ctx.arc(projX, projY, 3 * scale, 0, Math.PI * 2);
+              ctx.arc(projected.x, projected.y, 2, 0, Math.PI * 2);
+              ctx.fill();
+            } else if (projected.z > earthRadius * 0.8) {
+              ctx.fillStyle = 'rgba(64, 164, 223, 0.8)'; // Blue for water
+              ctx.beginPath();
+              ctx.arc(projected.x, projected.y, 2, 0, Math.PI * 2);
               ctx.fill();
             }
           }
@@ -132,7 +269,7 @@ const EarthVisualization = () => {
       }
       
       // Draw latitude/longitude grid
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
       ctx.lineWidth = 0.5;
       
       // Draw longitude lines
@@ -146,21 +283,23 @@ const EarthVisualization = () => {
           const phi = (90 - lat) * (Math.PI / 180);
           
           // Calculate 3D point
-          const x = -earthRadius * Math.sin(phi) * Math.cos(theta);
-          const y = earthRadius * Math.cos(phi);
-          const z = earthRadius * Math.sin(phi) * Math.sin(theta);
+          const { x, y, z } = sphericalToCartesian(earthRadius, theta, phi);
           
-          // Only draw if point is on the visible hemisphere (z > 0)
-          if (z > -earthRadius/4) {
-            // Project to 2D
-            const scale = 400 / (400 - z); // Perspective scale
-            const projX = centerX + x * scale;
-            const projY = centerY + y * scale;
-            
+          // Rotate around Earth's axis
+          const rotatedX = x * Math.cos(rotationY) - z * Math.sin(rotationY);
+          const rotatedZ = x * Math.sin(rotationY) + z * Math.cos(rotationY);
+          
+          // Apply Earth's tilt
+          const tiltedY = y * Math.cos(rotationX) - rotatedZ * Math.sin(rotationX);
+          const tiltedZ = y * Math.sin(rotationX) + rotatedZ * Math.cos(rotationX);
+          
+          const projected = projectPoint(rotatedX, tiltedY, tiltedZ);
+          
+          if (projected.visible) {
             if (lat === -90) {
-              ctx.moveTo(projX, projY);
+              ctx.moveTo(projected.x, projected.y);
             } else {
-              ctx.lineTo(projX, projY);
+              ctx.lineTo(projected.x, projected.y);
             }
           }
         }
@@ -178,21 +317,23 @@ const EarthVisualization = () => {
           const theta = (lng + rotationY * (180 / Math.PI)) * (Math.PI / 180);
           
           // Calculate 3D point
-          const x = -radius * Math.cos(theta);
-          const y = earthRadius * Math.cos(phi);
-          const z = radius * Math.sin(theta);
+          const { x, y, z } = sphericalToCartesian(radius, theta, phi);
           
-          // Only draw if point is on the visible hemisphere (z > 0)
-          if (z > -earthRadius/4) {
-            // Project to 2D
-            const scale = 400 / (400 - z); // Perspective scale
-            const projX = centerX + x * scale;
-            const projY = centerY + y * scale;
-            
+          // Rotate around Earth's axis
+          const rotatedX = x * Math.cos(rotationY) - z * Math.sin(rotationY);
+          const rotatedZ = x * Math.sin(rotationY) + z * Math.cos(rotationY);
+          
+          // Apply Earth's tilt
+          const tiltedY = y * Math.cos(rotationX) - rotatedZ * Math.sin(rotationX);
+          const tiltedZ = y * Math.sin(rotationX) + rotatedZ * Math.cos(rotationX);
+          
+          const projected = projectPoint(rotatedX, tiltedY, tiltedZ);
+          
+          if (projected.visible) {
             if (lng === -180) {
-              ctx.moveTo(projX, projY);
+              ctx.moveTo(projected.x, projected.y);
             } else {
-              ctx.lineTo(projX, projY);
+              ctx.lineTo(projected.x, projected.y);
             }
           }
         }
@@ -215,67 +356,13 @@ const EarthVisualization = () => {
       ctx.fill();
       
       ctx.restore();
-      
-      // Earth outline
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, earthRadius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(140, 200, 255, 0.3)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
     };
     
     // Animation loop
     let animationId: number;
     const animate = (time: number) => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Draw earth
-      drawEarth(time);
-      
-      // Draw orbit lines
-      orbits.forEach(orbit => {
-        ctx.beginPath();
-        for (let i = 0; i <= orbit.segments; i++) {
-          const angle = (i / orbit.segments) * Math.PI * 2 + orbit.offset + time * orbit.speed;
-          const x = centerX + Math.cos(angle) * orbit.radius;
-          const y = centerY + Math.sin(angle) * orbit.radius;
-          
-          if (i === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
-        }
-        ctx.strokeStyle = `hsla(${orbit.hue}, 80%, 60%, 0.3)`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      });
-      
-      // Draw and update points
-      points.forEach(point => {
-        // Update position
-        point.angle += point.speed;
-        point.x = centerX + Math.cos(point.angle) * point.distance;
-        point.y = centerY + Math.sin(point.angle) * point.distance;
-        
-        // Draw point
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, point.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${point.hue}, 70%, 60%, 0.8)`;
-        ctx.fill();
-        
-        // Draw glow
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, point.size * 2, 0, Math.PI * 2);
-        const gradient = ctx.createRadialGradient(
-          point.x, point.y, 0,
-          point.x, point.y, point.size * 2
-        );
-        gradient.addColorStop(0, `hsla(${point.hue}, 70%, 60%, 0.4)`);
-        gradient.addColorStop(1, `hsla(${point.hue}, 70%, 60%, 0)`);
-        ctx.fillStyle = gradient;
-        ctx.fill();
-      });
+      // Draw earth with layers and tilt
+      drawEarth(time / 1000);
       
       animationId = requestAnimationFrame(animate);
     };
