@@ -10,22 +10,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
 import { Medal, Info } from "lucide-react";
 import confetti from '../utils/confetti';
-import ThemeColorPicker from './ThemeColorPicker';
 
 const Layout = () => {
   return (
     <AppProvider>
       <div className="min-h-screen pb-20 dark:bg-gray-900 transition-colors duration-300">
         <Outlet />
-        
-        {/* Left side buttons */}
-        {/* Theme color picker button (first) */}
-        <div className="fixed bottom-72 left-4 z-50 flex items-center gap-2 group">
-          <ThemeColorPicker />
-          <span className="bg-background/80 backdrop-blur-sm px-2 py-1 rounded-md border border-primary/20 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-x-2 group-hover:translate-x-0">
-            Color Themes
-          </span>
-        </div>
         
         {/* Right side buttons */}
         {/* Theme toggle button (first) */}
