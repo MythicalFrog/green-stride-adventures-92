@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useApp } from '../context/AppContext';
-import { Trophy, Lock, CheckCircle, X } from 'lucide-react';
+import { Trophy, Lock, CheckCircle, X, ChevronRight } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 import confetti from 'canvas-confetti';
 
@@ -11,6 +11,7 @@ const RewardsPage = () => {
   const { userStats, redeemReward } = useApp();
   const [showRewardDialog, setShowRewardDialog] = useState(false);
   const [currentReward, setCurrentReward] = useState<any>(null);
+  const [showAllCoupons, setShowAllCoupons] = useState(false);
   
   const rewards = [
     {
@@ -76,6 +77,14 @@ const RewardsPage = () => {
       pointsRequired: 0,
       icon: '🔥',
       unlocked: false,
+    },
+    {
+      id: 'eco-influencer',
+      title: 'Eco Influencer',
+      description: 'Share 5 achievements on social media',
+      pointsRequired: 0,
+      icon: '📱',
+      unlocked: false,
     }
   ];
   
@@ -111,7 +120,10 @@ const RewardsPage = () => {
       pointsCost: 800,
       icon: '⚡',
       canAfford: userStats.totalPoints >= 800,
-    },
+    }
+  ];
+  
+  const additionalCoupons = [
     {
       id: 'eco-backpack',
       title: 'Recycled Material Backpack',
@@ -127,6 +139,38 @@ const RewardsPage = () => {
       pointsCost: 1500,
       icon: '🌳',
       canAfford: userStats.totalPoints >= 1500,
+    },
+    {
+      id: 'eco-hotel',
+      title: '30% Off Eco-Hotel Stay',
+      description: 'At participating Green Hotels',
+      pointsCost: 2000,
+      icon: '🏨',
+      canAfford: userStats.totalPoints >= 2000,
+    },
+    {
+      id: 'solar-charger',
+      title: 'Portable Solar Phone Charger',
+      description: 'Harness the sun to power your devices',
+      pointsCost: 1800,
+      icon: '🔋',
+      canAfford: userStats.totalPoints >= 1800,
+    },
+    {
+      id: 'reusable-bottle',
+      title: 'Premium Reusable Water Bottle',
+      description: 'Stainless steel, vacuum-insulated',
+      pointsCost: 900,
+      icon: '🍶',
+      canAfford: userStats.totalPoints >= 900,
+    },
+    {
+      id: 'eco-workshop',
+      title: 'Free Eco-Workshop Entry',
+      description: 'Learn sustainable living skills',
+      pointsCost: 600,
+      icon: '🔧',
+      canAfford: userStats.totalPoints >= 600,
     }
   ];
   
@@ -137,7 +181,6 @@ const RewardsPage = () => {
     setCurrentReward(coupon);
     setShowRewardDialog(true);
     
-    // Trigger confetti
     confetti({
       particleCount: 100,
       spread: 70,
@@ -219,6 +262,7 @@ const RewardsPage = () => {
                     ? 'hover:border-primary cursor-pointer transition' 
                     : 'opacity-70'
                 }`}
+                onClick={() => coupon.canAfford && handleRedeemReward(coupon)}
               >
                 <div className="flex items-center">
                   <div className="w-12 h-12 rounded-full bg-transparent border border-muted flex items-center justify-center text-2xl">
@@ -241,7 +285,6 @@ const RewardsPage = () => {
                         : 'bg-muted text-muted-foreground'
                     }`}
                     disabled={!coupon.canAfford}
-                    onClick={() => handleRedeemReward(coupon)}
                   >
                     {coupon.canAfford ? 'Redeem' : 'Not enough points'}
                   </button>
@@ -249,6 +292,59 @@ const RewardsPage = () => {
               </div>
             ))}
           </div>
+          
+          <div className="mt-6">
+            <Button 
+              variant="outline" 
+              className="w-full flex justify-between items-center"
+              onClick={() => setShowAllCoupons(!showAllCoupons)}
+            >
+              <span>{showAllCoupons ? "Hide additional rewards" : "Show more rewards"}</span>
+              <ChevronRight className={`h-4 w-4 transition-transform ${showAllCoupons ? 'rotate-90' : ''}`} />
+            </Button>
+          </div>
+          
+          {showAllCoupons && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              {additionalCoupons.map((coupon) => (
+                <div 
+                  key={coupon.id} 
+                  className={`border rounded-lg p-4 backdrop-blur-sm bg-transparent ${
+                    coupon.canAfford 
+                      ? 'hover:border-primary cursor-pointer transition' 
+                      : 'opacity-70'
+                  }`}
+                  onClick={() => coupon.canAfford && handleRedeemReward(coupon)}
+                >
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 rounded-full bg-transparent border border-muted flex items-center justify-center text-2xl">
+                      {coupon.icon}
+                    </div>
+                    <div className="ml-3 flex-1">
+                      <div className="font-medium">{coupon.title}</div>
+                      <div className="text-xs text-muted-foreground">{coupon.description}</div>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                    <div className="flex items-center text-amber-600 dark:text-amber-400">
+                      <Trophy className="w-4 h-4 mr-1" />
+                      <span className="font-medium">{coupon.pointsCost} pts</span>
+                    </div>
+                    <button
+                      className={`px-3 py-1 rounded text-sm ${
+                        coupon.canAfford
+                          ? 'bg-primary text-white'
+                          : 'bg-muted text-muted-foreground'
+                      }`}
+                      disabled={!coupon.canAfford}
+                    >
+                      {coupon.canAfford ? 'Redeem' : 'Not enough points'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
       

@@ -1,42 +1,172 @@
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-// In a real app, we would integrate with a mapping API like Google Maps, Mapbox, or Leaflet
-// For this demo, we'll create a simple placeholder
 const MapView = () => {
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+  const pointsRef = useRef([]);
+  const resultBoxRef = useRef(null);
+  const travelModeSelectRef = useRef(null);
+
+  useEffect(() => {
+    // Make sure Leaflet is available
+    if (typeof window !== 'undefined' && !window.L) {
+      const leafletCSS = document.createElement('link');
+      leafletCSS.rel = 'stylesheet';
+      leafletCSS.href = 'https://unpkg.com/leaflet@1.9.3/dist/leaflet.css';
+      document.head.appendChild(leafletCSS);
+
+      const leafletScript = document.createElement('script');
+      leafletScript.src = 'https://unpkg.com/leaflet@1.9.3/dist/leaflet.js';
+      leafletScript.onload = initializeMap;
+      document.body.appendChild(leafletScript);
+    } else {
+      initializeMap();
+    }
+
+    function initializeMap() {
+      if (!mapContainerRef.current || mapRef.current) return;
+
+      // Initialize map
+      const L = window.L;
+      const map = L.map(mapContainerRef.current).setView([40, -100], 4);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+      }).addTo(map);
+      mapRef.current = map;
+
+      const resultBox = resultBoxRef.current;
+      const travelModeSelect = travelModeSelectRef.current;
+      pointsRef.current = [];
+
+      function haversineDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = 
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+          Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+      }
+
+      function calculateCarbon(distanceKm) {
+        return {
+          car: distanceKm * 0.21,
+          bike: distanceKm * 0.005,
+          walk: 0,
+          bus: distanceKm * 0.089
+        };
+      }
+
+      function addCircleMarker(lat, lng) {
+        L.circleMarker([lat, lng], {
+          radius: 6,
+          color: 'blue',
+          fillColor: 'blue',
+          fillOpacity: 1
+        }).addTo(map);
+      }
+
+      function resetMap() {
+        pointsRef.current = [];
+        if (resultBox) resultBox.innerHTML = "Waiting for input...";
+        map.eachLayer((layer) => {
+          if (layer instanceof L.Polyline || layer instanceof L.CircleMarker) {
+            map.removeLayer(layer);
+          }
+        });
+      }
+
+      if (travelModeSelect) {
+        travelModeSelect.addEventListener('change', resetMap);
+      }
+
+      map.on('click', function(e) {
+        const { lat, lng } = e.latlng;
+        addCircleMarker(lat, lng);
+        pointsRef.current.push([lat, lng]);
+
+        if (pointsRef.current.length >= 2 && resultBox) {
+          const len = pointsRef.current.length;
+          const p1 = pointsRef.current[len - 2];
+          const p2 = pointsRef.current[len - 1];
+          const dist = haversineDistance(p1[0], p1[1], p2[0], p2[1]);
+          const carbon = calculateCarbon(dist);
+
+          L.polyline([p1, p2], { color: 'blue' }).addTo(map);
+
+          const mode = travelModeSelect ? travelModeSelect.value : 'car';
+          const userCO2 = carbon[mode];
+          const carCO2 = carbon.car;
+
+          const status = userCO2 < carCO2
+            ? `<span class='text-green-600 font-semibold'>You saved ${(carCO2 - userCO2).toFixed(2)} kg CO₂!</span>`
+            : `<span class='text-red-600 font-semibold'>You added ${(userCO2 - carCO2).toFixed(2)} kg CO₂ compared to a car ride.</span>`;
+
+          const html = `
+            <div class="mb-2">📏 <strong>Distance:</strong> ${dist.toFixed(2)} km</div>
+            <div class="mb-2">🧮 <strong>Carbon Footprint (per segment):</strong><br/>
+              🚗 Car: ${carbon.car.toFixed(2)} kg CO₂<br/>
+              🚴‍♀️ Bike: ${carbon.bike.toFixed(2)} kg CO₂<br/>
+              🚶 Walk: ${carbon.walk.toFixed(2)} kg CO₂<br/>
+              🚌 Bus: ${carbon.bus.toFixed(2)} kg CO₂
+            </div>
+            <div class="mt-2">👣 <strong>Your Mode (${mode}):</strong> ${userCO2.toFixed(2)} kg CO₂</div>
+            <div class="mt-2">${status}</div>
+          `;
+
+          resultBox.innerHTML = html;
+        }
+      });
+    }
+
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, []);
+
   return (
     <div className="container mx-auto px-4 py-8 mb-16 max-w-4xl">
       <h1 className="text-3xl font-bold mb-6">Your Eco Map</h1>
       
       <Card className="mb-6 bg-transparent backdrop-blur-sm">
         <CardHeader className="pb-2">
-          <CardTitle>Journey Map</CardTitle>
+          <CardTitle>Carbon Footprint Estimator</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="relative aspect-video bg-muted/50 rounded-md overflow-hidden">
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="text-xl font-medium text-muted-foreground">Interactive Map</div>
-              <div className="text-sm text-muted-foreground mt-2">
-                In a real app, this would show your journeys on an interactive map
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="w-full md:w-1/4 space-y-4">
+              <div className="p-4 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-lg shadow-sm">
+                <p className="text-sm text-muted-foreground mb-4">Click points on the map to calculate distance and carbon footprint.</p>
+                
+                <label className="block mb-2 text-sm font-medium">Your travel method:</label>
+                <select 
+                  ref={travelModeSelectRef}
+                  className="w-full mb-4 p-2 border rounded bg-background"
+                  defaultValue="car"
+                >
+                  <option value="car">🚗 Car</option>
+                  <option value="bike">🚴‍♀️ Bike</option>
+                  <option value="walk">🚶 Walk</option>
+                  <option value="bus">🚌 Bus</option>
+                </select>
+                
+                <div ref={resultBoxRef} className="text-sm">Waiting for input...</div>
               </div>
             </div>
-            <div className="absolute inset-0 bg-eco-green-light opacity-20 dark:opacity-10"></div>
-            
-            {/* Simplified map with paths */}
-            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <circle cx="30" cy="40" r="2" fill="#2A9D42" />
-              <circle cx="70" cy="60" r="2" fill="#2A9D42" />
-              <path d="M 30 40 Q 50 30, 70 60" stroke="#2A9D42" strokeWidth="0.5" fill="none" />
-              
-              <circle cx="20" cy="70" r="2" fill="#0EA5E9" />
-              <circle cx="60" cy="30" r="2" fill="#0EA5E9" />
-              <path d="M 20 70 Q 40 50, 60 30" stroke="#0EA5E9" strokeWidth="0.5" fill="none" />
-              
-              <circle cx="10" cy="30" r="2" fill="#72C267" />
-              <circle cx="90" cy="50" r="2" fill="#72C267" />
-              <path d="M 10 30 Q 50 70, 90 50" stroke="#72C267" strokeWidth="0.5" fill="none" />
-            </svg>
+
+            <div className="w-full md:w-3/4">
+              <div 
+                ref={mapContainerRef} 
+                className="w-full h-[400px] rounded-lg overflow-hidden border"
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
