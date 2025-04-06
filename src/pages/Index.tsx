@@ -49,21 +49,21 @@ const Index = () => {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="flex flex-col items-center mb-8 text-center">
         <div className="flex items-center mb-6">
-          <div className="w-24 h-24 mr-4">
+          <div className="w-20 h-20 mr-4">
             <svg viewBox="0 0 100 100" className="w-full h-full">
               <circle cx="50" cy="50" r="40" fill="rgba(72, 187, 120, 0.2)" />
               <circle cx="50" cy="50" r="30" fill="rgba(72, 187, 120, 0.4)" />
               <path d="M50 10 A40 40 0 0 1 90 50 A40 40 0 0 1 50 90 A40 40 0 0 1 10 50 A40 40 0 0 1 50 10 Z" fill="none" stroke="rgba(72, 187, 120, 0.8)" strokeWidth="2" />
             </svg>
           </div>
-          <h1 className="text-5xl font-bold">
+          <h1 className="text-4xl font-bold">
             <span className="text-green-500">Eco</span>
             <span>Quest</span>
           </h1>
         </div>
         
         <div className="h-8 mb-4 overflow-hidden">
-          <h2 className="text-xl font-medium">{displayText}<span className="animate-pulse">|</span></h2>
+          <h2 className="text-2xl font-medium">{displayText}<span className="animate-pulse">|</span></h2>
         </div>
         
         {/* Level progress */}
