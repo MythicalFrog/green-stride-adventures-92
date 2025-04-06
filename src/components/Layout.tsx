@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import Navigation from './Navigation';
 import JourneyControls from './JourneyControls';
@@ -12,9 +12,14 @@ import { Medal, Info } from "lucide-react";
 import confetti from '../utils/confetti';
 
 const Layout = () => {
+  // Apply smooth background transitions
+  useEffect(() => {
+    document.body.style.transition = 'background 0.5s ease-in-out';
+  }, []);
+
   return (
     <AppProvider>
-      <div className="min-h-screen pb-20 dark:bg-gray-900 transition-colors duration-300">
+      <div className="min-h-screen pb-20 dark:text-foreground transition-colors duration-500">
         <Outlet />
         
         {/* Right side buttons */}
