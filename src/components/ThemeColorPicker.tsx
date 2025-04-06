@@ -17,6 +17,7 @@ type ColorTheme = {
   secondary: string;
   background: string;
   foreground: string;
+  gradient?: string; // For background gradients
 };
 
 const colorThemes: ColorTheme[] = [
@@ -25,35 +26,40 @@ const colorThemes: ColorTheme[] = [
     primary: "142 55% 50%",
     secondary: "200 80% 80%",
     background: "142 54% 96%",
-    foreground: "142 5% 20%"
+    foreground: "142 5% 20%",
+    gradient: "linear-gradient(to bottom right, hsl(142 54% 96%), hsl(152 54% 92%))"
   },
   {
     name: "Purple-Orange",
     primary: "280 70% 60%",
     secondary: "35 90% 70%",
     background: "280 40% 96%",
-    foreground: "280 5% 20%"
+    foreground: "280 5% 20%",
+    gradient: "linear-gradient(to bottom right, hsl(280 40% 96%), hsl(290 40% 92%))"
   },
   {
     name: "Blue-Green",
     primary: "210 80% 60%",
     secondary: "150 80% 60%",
     background: "210 54% 96%",
-    foreground: "210 5% 20%"
+    foreground: "210 5% 20%",
+    gradient: "linear-gradient(to bottom right, hsl(210 54% 96%), hsl(180 54% 92%))"
   },
   {
     name: "Pink-Teal",
     primary: "330 80% 60%",
     secondary: "180 70% 60%",
     background: "330 30% 96%",
-    foreground: "330 5% 20%"
+    foreground: "330 5% 20%",
+    gradient: "linear-gradient(to bottom right, hsl(330 30% 96%), hsl(340 30% 92%))"
   },
   {
     name: "Amber-Blue",
     primary: "40 90% 60%",
     secondary: "220 80% 60%",
     background: "40 40% 96%",
-    foreground: "40 5% 20%"
+    foreground: "40 5% 20%",
+    gradient: "linear-gradient(to bottom right, hsl(40 40% 96%), hsl(50 40% 92%))"
   },
 ];
 
@@ -66,6 +72,12 @@ const ThemeColorPicker: React.FC = () => {
     document.documentElement.style.setProperty('--secondary', theme.secondary);
     document.documentElement.style.setProperty('--background', theme.background);
     document.documentElement.style.setProperty('--foreground', theme.foreground);
+    
+    // Apply background gradient to the body
+    if (theme.gradient) {
+      document.body.style.background = theme.gradient;
+      document.body.style.backgroundAttachment = 'fixed';
+    }
     
     // Show success toast
     toast({

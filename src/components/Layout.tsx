@@ -11,8 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Medal, Info } from "lucide-react";
 import confetti from '../utils/confetti';
 import ThemeColorPicker from './ThemeColorPicker';
-import FlappyBirdGame from './FlappyBirdGame';
-import SnakeGame from './SnakeGame';
 
 const Layout = () => {
   return (
@@ -26,22 +24,6 @@ const Layout = () => {
           <ThemeColorPicker />
           <span className="bg-background/80 backdrop-blur-sm px-2 py-1 rounded-md border border-primary/20 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-x-2 group-hover:translate-x-0">
             Color Themes
-          </span>
-        </div>
-        
-        {/* Flappy Bird game button (second) */}
-        <div className="fixed bottom-60 left-4 z-50 flex items-center gap-2 group">
-          <FlappyBirdGame />
-          <span className="bg-background/80 backdrop-blur-sm px-2 py-1 rounded-md border border-primary/20 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-x-2 group-hover:translate-x-0">
-            Flappy Bird
-          </span>
-        </div>
-        
-        {/* Snake game button (third) */}
-        <div className="fixed bottom-48 left-4 z-50 flex items-center gap-2 group">
-          <SnakeGame />
-          <span className="bg-background/80 backdrop-blur-sm px-2 py-1 rounded-md border border-primary/20 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-x-2 group-hover:translate-x-0">
-            Snake Game
           </span>
         </div>
         

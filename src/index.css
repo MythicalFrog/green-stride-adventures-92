@@ -92,6 +92,9 @@
 
   body {
     @apply bg-background text-foreground font-sans transition-colors duration-300;
+    background: linear-gradient(to bottom right, hsl(var(--background)), hsl(calc(var(--background) + 10deg) var(--background)/50% var(--background)/95%));
+    background-attachment: fixed;
+    min-height: 100vh;
   }
   
   /* Glassmorphism utilities */
@@ -121,6 +124,14 @@
     height: 100%;
     pointer-events: none;
     z-index: 9999;
+  }
+  
+  .eco-green {
+    color: hsl(var(--primary));
+  }
+  
+  .eco-sky {
+    color: hsl(var(--secondary));
   }
 }
 
