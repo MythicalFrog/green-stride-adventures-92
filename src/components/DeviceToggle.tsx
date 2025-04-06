@@ -43,7 +43,7 @@ const DeviceToggle = () => {
         document.documentElement.style.margin = '0 auto';
         document.documentElement.style.border = '1px solid var(--border)';
         document.documentElement.style.borderRadius = '20px';
-        document.documentElement.style.height = '90vh';
+        document.documentElement.style.height = '85vh'; // Slightly shorter to fit better
         document.documentElement.style.overflow = 'auto';
         document.documentElement.style.marginTop = '2rem';
         document.documentElement.style.marginBottom = '2rem';
@@ -77,6 +77,29 @@ const DeviceToggle = () => {
           .mobile-view input {
             font-size: 16px !important;
           }
+          /* Make navigation more mobile-friendly */
+          .mobile-view nav {
+            padding: 0.5rem !important;
+          }
+          .mobile-view nav a {
+            padding: 0.75rem !important;
+          }
+          /* Adjust cards for better mobile layout */
+          .mobile-view .card {
+            margin-bottom: 1rem !important;
+            padding: 1rem !important;
+          }
+          /* Ensure elements don't overflow in mobile view */
+          .mobile-view * {
+            max-width: 100% !important;
+          }
+          /* Better spacing for forms in mobile */
+          .mobile-view form input,
+          .mobile-view form select,
+          .mobile-view form textarea {
+            margin-bottom: 1rem !important;
+            padding: 0.75rem !important;
+          }
         `;
         if (!document.getElementById('mobile-view-styles')) {
           document.head.appendChild(mobileStyles);
@@ -109,7 +132,7 @@ const DeviceToggle = () => {
       variant="outline"
       size="icon"
       onClick={toggleDeviceView}
-      className="fixed top-4 right-16 z-50 rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
+      className="fixed top-16 right-4 z-50 rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
       aria-label="Toggle device view"
     >
       {isMobileView ? <Laptop className="h-4 w-4" /> : <Smartphone className="h-4 w-4" />}

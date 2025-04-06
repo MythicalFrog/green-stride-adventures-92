@@ -1,14 +1,19 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '../context/AppContext';
 import { Bike, Car, Bus, Footprints, Play, Square, Minimize, Maximize } from 'lucide-react';
 import { TransportMode } from '../types';
 import { cn } from '@/lib/utils';
+import { useLocation } from 'react-router-dom';
 
 const JourneyControls = () => {
   const { currentJourney, startJourney, endJourney } = useApp();
   const [minimized, setMinimized] = useState(false);
+  const location = useLocation();
+  
+  // Only hide on certain pages where it's not needed
+  const shouldHide = ['/login', '/signup'].includes(location.pathname);
   
   const transportModes: { mode: TransportMode; icon: React.ReactNode; label: string; color: string }[] = [
     { 
@@ -36,6 +41,11 @@ const JourneyControls = () => {
       color: 'bg-purple-100 text-purple-700 border-purple-200'
     },
   ];
+
+  // If we should hide this component, return null
+  if (shouldHide) {
+    return null;
+  }
 
   if (currentJourney) {
     const activeMode = transportModes.find(m => m.mode === currentJourney.mode);
