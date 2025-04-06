@@ -1,10 +1,15 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import EarthVisualization from '../components/EarthVisualization';
 import { Leaf, Award, MapPin, Bike, Footprints } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { 
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
 
 const About = () => {
   return (
@@ -128,10 +133,77 @@ const About = () => {
         </div>
       </div>
       
-      <div className="flex justify-center mb-8">
-        <Link to="/signup">
-          <Button size="lg" className="font-medium px-8">Join EcoQuest Today</Button>
-        </Link>
+      {/* FAQ Section */}
+      <div className="mb-16">
+        <h2 className="text-2xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
+        <p className="text-center text-muted-foreground mb-8">
+          Find answers to common questions about our eye tracking technology, applications, and services.
+        </p>
+        
+        <Accordion type="single" collapsible className="w-full border rounded-lg">
+          <AccordionItem value="item-1" className="border-b">
+            <AccordionTrigger className="px-4">How does EcoQuest track my environmental impact?</AccordionTrigger>
+            <AccordionContent className="px-4">
+              EcoQuest uses a sophisticated algorithm to calculate your carbon footprint reduction based on the distance, 
+              duration, and mode of transportation you choose for your journeys compared to standard vehicle emissions.
+            </AccordionContent>
+          </AccordionItem>
+          
+          <AccordionItem value="item-2" className="border-b">
+            <AccordionTrigger className="px-4">Can I use EcoQuest without location tracking?</AccordionTrigger>
+            <AccordionContent className="px-4">
+              Yes! You can manually log your eco-friendly journeys if you prefer not to use automatic GPS tracking. 
+              Simply select your transportation mode, enter the distance, and submit your journey.
+            </AccordionContent>
+          </AccordionItem>
+          
+          <AccordionItem value="item-3" className="border-b">
+            <AccordionTrigger className="px-4">What kinds of rewards can I earn?</AccordionTrigger>
+            <AccordionContent className="px-4">
+              Rewards vary from digital achievements and badges to discounts at partner eco-friendly businesses, 
+              free public transportation passes, and entries into monthly prize drawings for sustainable products.
+            </AccordionContent>
+          </AccordionItem>
+          
+          <AccordionItem value="item-4" className="border-b">
+            <AccordionTrigger className="px-4">Is my data shared with third parties?</AccordionTrigger>
+            <AccordionContent className="px-4">
+              We only share anonymized, aggregated data for research purposes. Your personal information and journey details 
+              are kept private and secure. You can review our Privacy Policy for complete details.
+            </AccordionContent>
+          </AccordionItem>
+          
+          <AccordionItem value="item-5">
+            <AccordionTrigger className="px-4">How can I suggest new features or improvements?</AccordionTrigger>
+            <AccordionContent className="px-4">
+              We welcome your feedback! You can submit suggestions through the app's feedback form or by contacting our 
+              support team directly at the email address provided in the Contact section.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+      
+      {/* Contact Section */}
+      <div className="border-t pt-10 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="md:col-span-1">
+            <h3 className="text-xl font-bold mb-4">Contact</h3>
+            <p className="text-muted-foreground">info@eyetrack.tech</p>
+            <p className="text-muted-foreground mb-2">123 Vision Street</p>
+            <p className="text-muted-foreground">San Francisco, CA 94103</p>
+          </div>
+          
+          <div className="md:col-span-2 flex flex-col md:items-end justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground mb-3">© 2025 EyeTrack Technologies. All rights reserved.</p>
+              <div className="flex flex-wrap gap-4 text-sm">
+                <a href="#" className="text-primary hover:underline">Privacy Policy</a>
+                <a href="#" className="text-primary hover:underline">Terms of Service</a>
+                <a href="#" className="text-primary hover:underline">Cookie Policy</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
