@@ -2,9 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Laptop, Smartphone } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
 
 const DeviceToggle = () => {
   const [isMobileView, setIsMobileView] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Check if there's a saved preference
@@ -24,6 +26,12 @@ const DeviceToggle = () => {
     
     // Apply viewport changes
     applyViewportMeta(newView);
+
+    // Show toast notification
+    toast({
+      title: newView ? "Mobile View Enabled" : "Desktop View Enabled",
+      description: newView ? "Optimized for smartphone experience" : "Full desktop experience activated",
+    });
   };
 
   const applyViewportMeta = (isMobile: boolean) => {
@@ -39,6 +47,40 @@ const DeviceToggle = () => {
         document.documentElement.style.overflow = 'auto';
         document.documentElement.style.marginTop = '2rem';
         document.documentElement.style.marginBottom = '2rem';
+        
+        // Improve text readability in mobile view
+        document.body.classList.add('mobile-view');
+        
+        // Add custom mobile styles
+        const mobileStyles = document.getElementById('mobile-view-styles') || document.createElement('style');
+        mobileStyles.id = 'mobile-view-styles';
+        mobileStyles.textContent = `
+          .mobile-view {
+            font-size: 16px !important;
+            line-height: 1.5 !important;
+          }
+          .mobile-view h1 {
+            font-size: 24px !important;
+            line-height: 1.2 !important;
+          }
+          .mobile-view h2 {
+            font-size: 20px !important;
+            line-height: 1.2 !important;
+          }
+          .mobile-view p {
+            font-size: 16px !important;
+            line-height: 1.5 !important;
+          }
+          .mobile-view button {
+            min-height: 44px !important;
+          }
+          .mobile-view input {
+            font-size: 16px !important;
+          }
+        `;
+        if (!document.getElementById('mobile-view-styles')) {
+          document.head.appendChild(mobileStyles);
+        }
       } else {
         viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
         document.documentElement.style.maxWidth = '';
@@ -49,6 +91,15 @@ const DeviceToggle = () => {
         document.documentElement.style.overflow = '';
         document.documentElement.style.marginTop = '';
         document.documentElement.style.marginBottom = '';
+        
+        // Remove mobile view class
+        document.body.classList.remove('mobile-view');
+        
+        // Remove custom styles
+        const mobileStyles = document.getElementById('mobile-view-styles');
+        if (mobileStyles) {
+          mobileStyles.remove();
+        }
       }
     }
   };
@@ -58,7 +109,7 @@ const DeviceToggle = () => {
       variant="outline"
       size="icon"
       onClick={toggleDeviceView}
-      className="fixed top-4 right-4 z-50 rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
+      className="fixed top-4 right-16 z-50 rounded-full h-10 w-10 border border-primary/20 bg-background/80 backdrop-blur-sm"
       aria-label="Toggle device view"
     >
       {isMobileView ? <Laptop className="h-4 w-4" /> : <Smartphone className="h-4 w-4" />}
