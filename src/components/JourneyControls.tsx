@@ -12,8 +12,9 @@ const JourneyControls = () => {
   const [minimized, setMinimized] = useState(false);
   const location = useLocation();
   
-  // Only hide on certain pages where it's not needed
-  const shouldHide = ['/login', '/signup'].includes(location.pathname);
+  // Only show on certain pages where it's needed
+  const hideOnPaths = ['/login', '/signup', '/about', '/leaderboard', '/journey'];
+  const shouldHide = hideOnPaths.includes(location.pathname);
   
   const transportModes: { mode: TransportMode; icon: React.ReactNode; label: string; color: string }[] = [
     { 

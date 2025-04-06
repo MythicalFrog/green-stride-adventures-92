@@ -2,8 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Leaf, Map, BarChart, Trophy, Compass, Route, Medal, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Leaf, Map, BarChart, Trophy, Compass, Route } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 const Navigation = () => {
@@ -52,11 +51,13 @@ const Navigation = () => {
             to={item.path} 
             className={cn(
               "flex flex-col items-center p-2 rounded-md transition-colors",
-              location.pathname === item.path ? "text-primary" : "text-muted-foreground hover:text-foreground",
+              location.pathname === item.path 
+                ? "text-primary bg-primary/10" 
+                : "text-muted-foreground hover:text-foreground hover:bg-background/60",
             )}
           >
             {item.icon}
-            <span className="text-xs mt-1">{item.name}</span>
+            {!useApp().userStats?.isPhoneView && <span className="text-xs mt-1">{item.name}</span>}
           </Link>
         ))}
       </div>
@@ -65,4 +66,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Laptop, Smartphone } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
@@ -99,6 +99,18 @@ const DeviceToggle = () => {
           .mobile-view form textarea {
             margin-bottom: 1rem !important;
             padding: 0.75rem !important;
+          }
+          /* Add a top bar for mobile view */
+          .mobile-view:after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 24px;
+            background-color: var(--background);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
           }
         `;
         if (!document.getElementById('mobile-view-styles')) {
