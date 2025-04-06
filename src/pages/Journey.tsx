@@ -3,6 +3,8 @@ import React from 'react';
 import EarthVisualization from '../components/EarthVisualization';
 import { useApp } from '../context/AppContext';
 import { Leaf, Route, Globe } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const Journey = () => {
   const { currentJourney } = useApp();
@@ -70,6 +72,16 @@ const Journey = () => {
           </div>
           
           <p className="text-muted-foreground mb-8 max-w-md">Make green choices, track your impact, earn rewards</p>
+          
+          {/* Sign in and Sign up buttons added here */}
+          <div className="flex space-x-4 mb-8">
+            <Link to="/login">
+              <Button variant="outline" className="px-6">Sign in</Button>
+            </Link>
+            <Link to="/signup">
+              <Button className="px-6">Sign up</Button>
+            </Link>
+          </div>
           
           <div className="mt-8 p-6 bg-transparent backdrop-blur-sm border border-muted rounded-lg max-w-md">
             <h3 className="text-xl font-medium mb-4">What is EcoQuest?</h3>
