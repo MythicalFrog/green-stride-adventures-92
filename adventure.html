@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventure - EcoQuest</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <img src="static/images/eco-leaf.svg" alt="EcoQuest Logo" class="logo-icon">
+            <span class="logo-text"><span class="green">Eco</span>Quest</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Journey</a></li>
+            <li><a href="adventure.html" class="active">Adventure</a></li>
+            <li><a href="stats.html">Statistics</a></li>
+            <li><a href="rewards.html">Rewards</a></li>
+        </ul>
+        <div class="theme-toggle">
+            <button id="themeToggle" aria-label="Toggle dark mode">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="adventure-header">
+            <div>
+                <h1 class="page-title">EcoQuests</h1>
+                <p class="page-description">Complete eco-challenges and earn rewards</p>
+            </div>
+            <div class="level-indicator">
+                <div class="level-badge">Level 3</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%;"></div>
+                </div>
+                <div class="progress-text">1250/2000 XP</div>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card green-card">
+                <div class="stat-icon">🌿</div>
+                <div class="stat-content">
+                    <div class="stat-value">12.5 kg</div>
+                    <div class="stat-label">Carbon Saved</div>
+                    <div class="stat-description">Total CO₂ emissions prevented</div>
+                </div>
+            </div>
+            
+            <div class="stat-card blue-card">
+                <div class="stat-icon">🚶</div>
+                <div class="stat-content">
+                    <div class="stat-value">25 km</div>
+                    <div class="stat-label">Distance Traveled</div>
+                    <div class="stat-description">Total eco-friendly distance</div>
+                </div>
+            </div>
+            
+            <div class="stat-card amber-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-content">
+                    <div class="stat-value">1250</div>
+                    <div class="stat-label">Points Earned</div>
+                    <div class="stat-description">Day streak: 5</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="adventure-card">
+                <div class="card-header">
+                    <h2 class="card-title">Recent Journeys</h2>
+                    <p class="card-description">Your eco-friendly trips</p>
+                </div>
+                <div class="card-content">
+                    <ul class="journey-list">
+                        <li class="journey-item">
+                            <div class="journey-mode">
+                                <div class="journey-icon">🚶</div>
+                                <div>Walking</div>
+                            </div>
+                            <div class="journey-details">
+                                <div class="journey-distance">2.1 km</div>
+                                <div class="journey-time">Today, 10:30 AM</div>
+                            </div>
+                            <div class="journey-points">+ 21 pts</div>
+                        </li>
+                        <li class="journey-item">
+                            <div class="journey-mode">
+                                <div class="journey-icon">🚲</div>
+                                <div>Biking</div>
+                            </div>
+                            <div class="journey-details">
+                                <div class="journey-distance">4.5 km</div>
+                                <div class="journey-time">Yesterday, 5:15 PM</div>
+                            </div>
+                            <div class="journey-points">+ 23 pts</div>
+                        </li>
+                        <li class="journey-item">
+                            <div class="journey-mode">
+                                <div class="journey-icon">🚌</div>
+                                <div>Public Transport</div>
+                            </div>
+                            <div class="journey-details">
+                                <div class="journey-distance">8.2 km</div>
+                                <div class="journey-time">Mon, 9:00 AM</div>
+                            </div>
+                            <div class="journey-points">+ 16 pts</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="adventure-card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">Active Challenges</h2>
+                        <p class="card-description">Complete these for bonus points</p>
+                    </div>
+                    <button class="btn btn-outline btn-sm">View All</button>
+                </div>
+                <div class="card-content">
+                    <ul class="challenge-list">
+                        <li class="challenge-item">
+                            <div class="challenge-icon">🚶</div>
+                            <div class="challenge-content">
+                                <div class="challenge-title">Walk to Local Park</div>
+                                <div class="challenge-description">Take a refreshing walk to Local Park</div>
+                                <div class="challenge-meta">
+                                    <span class="challenge-distance">0.9 km</span>
+                                    <span class="challenge-points">50 pts</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="challenge-item">
+                            <div class="challenge-icon">🚲</div>
+                            <div class="challenge-content">
+                                <div class="challenge-title">Bike to Grocery Store</div>
+                                <div class="challenge-description">Cycle to Grocery Store instead of driving</div>
+                                <div class="challenge-meta">
+                                    <span class="challenge-distance">1.6 km</span>
+                                    <span class="challenge-points">75 pts</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="challenge-item">
+                            <div class="challenge-icon">🚌</div>
+                            <div class="challenge-content">
+                                <div class="challenge-title">Use Public Transport</div>
+                                <div class="challenge-description">Take a bus or train to Farmer's Market</div>
+                                <div class="challenge-meta">
+                                    <span class="challenge-distance">2.5 km</span>
+                                    <span class="challenge-points">40 pts</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="static/js/main.js"></script>
+</body>
+</html>

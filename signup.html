@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up - EcoQuest</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <img src="static/images/eco-leaf.svg" alt="EcoQuest Logo" class="logo-icon">
+                    <h1 class="auth-title">
+                        <span class="green">Eco</span>
+                        <span>Quest</span>
+                    </h1>
+                </div>
+                <p class="auth-description">Create an account to start your eco journey</p>
+            </div>
+            <div class="auth-content">
+                <form id="signupForm" action="/api/signup" method="post">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="example@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                        <p class="password-hint">Password must be at least 8 characters long</p>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full" id="signupBtn">Create account</button>
+                    <div class="loading-indicator" id="signupLoading">Creating account...</div>
+                </form>
+            </div>
+            <div class="auth-footer">
+                <p class="login-prompt">
+                    Already have an account? 
+                    <a href="login.html" class="login-link">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/js/auth.js"></script>
+</body>
+</html>

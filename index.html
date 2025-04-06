@@ -1,26 +1,111 @@
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>green-stride-adventures</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoQuest - Green Transportation Tracker</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <img src="static/images/eco-leaf.svg" alt="EcoQuest Logo" class="logo-icon">
+            <span class="logo-text"><span class="green">Eco</span>Quest</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Journey</a></li>
+            <li><a href="adventure.html">Adventure</a></li>
+            <li><a href="stats.html">Statistics</a></li>
+            <li><a href="rewards.html">Rewards</a></li>
+        </ul>
+        <div class="theme-toggle">
+            <button id="themeToggle" aria-label="Toggle dark mode">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </div>
+    </nav>
 
-    <meta property="og:title" content="green-stride-adventures" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <main class="container">
+        <div class="grid-container">
+            <div class="earth-visualization">
+                <div id="earth-canvas"></div>
+                <div class="earth-overlay">
+                    <div class="logo-container">
+                        <div class="app-logo">
+                            <div class="logo-circles">
+                                <svg viewBox="0 0 100 100" class="logo-svg">
+                                    <circle cx="50" cy="50" r="40" fill="rgba(72, 187, 120, 0.2)" />
+                                    <circle cx="50" cy="50" r="30" fill="rgba(72, 187, 120, 0.4)" />
+                                    <path d="M50 10 A40 40 0 0 1 90 50 A40 40 0 0 1 50 90 A40 40 0 0 1 10 50 A40 40 0 0 1 50 10 Z" fill="none" stroke="rgba(72, 187, 120, 0.8)" stroke-width="2" />
+                                </svg>
+                            </div>
+                            <h1 class="logo-title">
+                                <span class="green">Eco</span>
+                                <span>Quest</span>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <div id="journey-content">
+                    <!-- If journey is active, this will be populated with journey details -->
+                </div>
+                
+                <div id="main-content" class="text-center">
+                    <div class="logo-large">
+                        <div class="logo-circles-large">
+                            <svg viewBox="0 0 100 100" class="w-full h-full">
+                                <circle cx="50" cy="50" r="40" fill="rgba(72, 187, 120, 0.2)" />
+                                <circle cx="50" cy="50" r="30" fill="rgba(72, 187, 120, 0.4)" />
+                                <path d="M50 10 A40 40 0 0 1 90 50 A40 40 0 0 1 50 90 A40 40 0 0 1 10 50 A40 40 0 0 1 50 10 Z" fill="none" stroke="rgba(72, 187, 120, 0.8)" stroke-width="2" />
+                            </svg>
+                        </div>
+                        <h1 class="app-title">
+                            <span class="green">Eco</span>
+                            <span>Quest</span>
+                        </h1>
+                    </div>
+                    
+                    <p class="app-description">Make green choices, track your impact, earn rewards</p>
+                    
+                    <div class="auth-buttons">
+                        <a href="login.html" class="btn btn-outline">Sign in</a>
+                        <a href="signup.html" class="btn btn-primary">Sign up</a>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3 class="info-title">What is EcoQuest?</h3>
+                        <p class="info-description">
+                            EcoQuest is a platform designed to help you make environmentally friendly choices in your daily travel and activities. 
+                            By tracking your sustainable transportation methods, you can see your positive impact on the environment while earning rewards.
+                        </p>
+                        <div class="benefits-grid">
+                            <div class="benefit-item green-item">
+                                <div class="benefit-label">Track</div>
+                                <div class="benefit-desc">Your journeys</div>
+                            </div>
+                            <div class="benefit-item blue-item">
+                                <div class="benefit-label">Reduce</div>
+                                <div class="benefit-desc">Carbon emissions</div>
+                            </div>
+                            <div class="benefit-item amber-item">
+                                <div class="benefit-label">Reward</div>
+                                <div class="benefit-desc">Earn points</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
-
-  <body>
-    <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <script src="static/js/three.min.js"></script>
+    <script src="static/js/earth.js"></script>
+    <script src="static/js/main.js"></script>
+</body>
 </html>
